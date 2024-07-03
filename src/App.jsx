@@ -1,15 +1,20 @@
-
-import './App.css'
-import NavBar from './components/NavBar'
+import './App.css';
+import NavBar from './components/NavBar';
+import Heroes from './components/Heroes';
 
 function App() {
-
   return (
     <>
       <NavBar />
-      <div>Hello world</div>
+      <Heroes
+        title="Collection"
+        subtitle="blah blah"
+        imageUrl='/Hero.jpg'        
+        linkUrl="/shop-now"
+      />
+
     </>
-  )
+  );
 }
 
-export default App
+export default App;

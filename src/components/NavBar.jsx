@@ -1,30 +1,26 @@
 import React from 'react';
 import './NavBar.css';
+import { Link } from 'react-router-dom';
 
-const Navbar = () => {
-    return (
-        <nav className="navbar">
-            <div className="navbar-logo">
-                <a href="/">StellarWear</a>
-            </div>
-            <ul className="navbar-links">
-                <li><a href="/new-in">New In</a></li>
-                <li><a href="/mens">Mens</a></li>
-                <li><a href="/collections">Collections</a></li>
-                <li><a href="/outfit-builder">Outfit Builder</a></li>
-                <li><a href="/outlet">Outlet</a></li>
-            </ul>
-            <div className="navbar-icons">
-                <a href="/wishlist">Wishlist</a>
-                <a href="/account">Account</a>
-                <a href="/cart">Cart</a>
-            </div>
-        </nav>
-    );
+export const Navbar = () => {
+  return (
+    <nav className="navbar">
+      <div className="navbar-logo">
+        <Link to="/">StellarWear</Link>
+      </div>
+      <ul className="navbar-links">
+        <li><Link to="/new-in">New In</Link></li>
+        <li><Link to="/mens">Mens</Link></li>
+        <li><Link to="/collections">Collections</Link></li>
+        <li><Link to="/outfit-builder">Outfit Builder</Link></li>
+        <li><Link to="/outlet">Outlet</Link></li>
+      </ul>
+      <div className="navbar-icons">
+        <Link to="/wishlist">Wishlist</Link>
+        <Link to="/login">Account</Link>
+        <Link to="/cart">Cart</Link>
+      </div>
+    </nav>
+  );
 };
-
-export default Navbar;
-
-
-
 

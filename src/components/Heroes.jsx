@@ -1,5 +1,3 @@
-// Heroes.js
-
 import React from 'react';
 import './heroes.css';
 

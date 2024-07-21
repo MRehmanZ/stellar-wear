@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import "./App.css";
-import NavBar from "./components/NavBar";
-import Heroes from "./components/Heroes";
-import Login from "./components/Login";
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './App.css';
+import NavBar from './components/NavBar';
+import Home from './components/Home';
+import Login from './components/Login';
+import Register from './components/Register';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -11,23 +13,17 @@ function App() {
     setIsLoggedIn(true);
   };
 
-  
-
   return (
-    <>
-      <NavBar AccountClick={DirectLogin} />
-      <Route path="/" element={<App />}
-      <Route path="/Login" element={<Login />}
-      <Heroes
-        title="Collection"
-        subtitle="blah blah"
-        imageUrl="/Hero.jpg"
-        linkUrl="/shop-now"
-      />
-      <div className="container">
-        {isLoggedIn ? <h1>Welcome!</h1> : <Login onLogin={handleLogin} />}
+    <Router>
+      <NavBar />
+      <div>
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route exact path="/Register" element={<Register />} />
+        </Routes>
       </div>
-    </>
+    </Router>
   );
 }
 

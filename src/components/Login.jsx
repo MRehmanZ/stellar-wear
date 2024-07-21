@@ -41,9 +41,9 @@ function Login({ onLogin }) {
       <div className="flex items-center justify-center bg-muted p-6 lg:p-10">
         <div className="mx-auto w-full max-w-[400px] space-y-6">
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-bold">Welcome back!</h1>
+            <h1 className="text-3xl font-bold">Welcome Back!</h1>
             <p className="text-muted-foreground">
-              Enter your credentials to access your account.
+              Enter your details to access your account.
             </p>
           </div>
           <form className="space-y-4">
@@ -69,23 +69,25 @@ function Login({ onLogin }) {
               </div>
               <Input id="password" type="password" required />
             </div>
-            <Button type="submit" className="w-full">
-              Sign in
-            </Button>
+            <Link to="/">
+              <Button type="submit" className="w-full">
+                Sign in
+              </Button>
+            </Link>
           </form>
         </div>
       </div>
       <div className="flex items-center justify-center bg-primary p-6 lg:p-10">
         <div className="mx-auto w-full max-w-[400px] space-y-6 text-primary-foreground">
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-bold">New here?</h1>
+            <h1 className="text-3xl font-bold">New Customer</h1>
             <p className="text-muted-primary-foreground">
-              Create an account and join our community.
+              Register with Stellar Wear today
             </p>
           </div>
           <Link
-            href="#"
-            className="inline-flex w-full items-center justify-center rounded-md bg-primary-foreground px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            to="/register"
+            className="inline-flex w-full items-center justify-center rounded-md bg-primary-foreground px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/90 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
             prefetch={false}
           >
             Sign up

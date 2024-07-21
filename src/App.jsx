@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
-import NavBar from './components/NavBar';
-import Home from './components/Home';
-import Login from './components/Login';
-import Register from './components/Register';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
+import NavBar from "./components/NavBar";
+import Home from "./components/Home";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import { Toaster } from "sonner";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,11 +17,16 @@ function App() {
   return (
     <Router>
       <NavBar />
+      <Toaster />
       <div>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route exact path="/Register" element={<Register />} />
+          <Route
+            exact
+            path="/login"
+            element={<Login onLogin={handleLogin} />}
+          />
+          <Route exact path="/register" element={<Register />} />
         </Routes>
       </div>
     </Router>

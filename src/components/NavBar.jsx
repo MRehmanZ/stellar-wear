@@ -18,7 +18,7 @@ const NavBar = () => {
       <div className="navbar-icons">
         <Link to="/wishlist">Wishlist</Link>
         <Link to="/login">Account</Link>
-        <Link to="/cart">Cart</Link>
+        <Link to="/Cart">Cart</Link>
       </div>
     </nav>
   );

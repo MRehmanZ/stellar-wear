@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import { Toaster } from "sonner";
+import Cart from "./components/Cart";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,6 +28,7 @@ function App() {
             element={<Login onLogin={handleLogin} />}
           />
           <Route exact path="/register" element={<Register />} />
+          <Route exact path="/Cart" element={<Cart />} />
         </Routes>
       </div>
     </Router>

@@ -1,9 +1,6 @@
-﻿using Backend.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -29,6 +26,7 @@ namespace Backend.Services
 
         public async Task<IdentityResult> RegisterAsync(ApplicationUser user, string password)
         {
+            // Password hashing is handled by ASP.NET Core Identity
             return await _userManager.CreateAsync(user, password);
         }
 
@@ -54,9 +52,25 @@ namespace Backend.Services
             return await _userManager.IsEmailConfirmedAsync(user);
         }
 
-        public async Task<SignInResult> PasswordSignInAsync(string email, string password)
+        public async Task<SignInResult> PasswordSignInAsync(string usernameOrEmail, string password)
         {
-            return await _signInManager.PasswordSignInAsync(email, password, isPersistent: false, lockoutOnFailure: false);
+            ApplicationUser user;
+
+            if (usernameOrEmail.Contains("@"))
+            {
+                // Treat input as an email
+                user = await _userManager.FindByEmailAsync(usernameOrEmail);
+            }
+            else
+            {
+                // Treat input as a username
+                user = await _userManager.FindByNameAsync(usernameOrEmail);
+            }
+
+            if (user == null)
+                return SignInResult.Failed;
+
+            return await _signInManager.PasswordSignInAsync(user.UserName, password, isPersistent: false, lockoutOnFailure: false);
         }
 
         public async Task<IList<string>> GetRolesAsync(ApplicationUser user)
@@ -74,15 +88,24 @@ namespace Backend.Services
             await _signInManager.SignOutAsync();
         }
 
+        public async Task<ApplicationUser> FindByEmailOrUsernameAsync(string usernameOrEmail)
+        {
+            if (usernameOrEmail.Contains("@"))
+            {
+                return await _userManager.FindByEmailAsync(usernameOrEmail);
+            }
+            return await _userManager.FindByNameAsync(usernameOrEmail);
+        }
+
         public string GenerateJwtToken(ApplicationUser user, IList<string> roles)
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
 
-            // Add roles as claims
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));

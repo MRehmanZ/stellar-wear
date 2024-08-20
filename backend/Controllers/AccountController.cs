@@ -1,6 +1,5 @@
 using Backend.Models;
 using Backend.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -25,7 +24,12 @@ namespace Backend.Controllers
                 return BadRequest(model);
             }
 
-            var user = new ApplicationUser { Username = model.Email, Email = model.Email };
+            var user = new ApplicationUser
+            {
+                UserName = model.Username,
+                Email = model.Email
+            };
+
             var result = await _authService.RegisterAsync(user, model.Password);
 
             if (result.Succeeded)
@@ -64,22 +68,13 @@ namespace Backend.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(AuthModel model)
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = await _authService.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                return Unauthorized("Invalid login attempt.");
-            }
+            var result = await _authService.PasswordSignInAsync(model.UsernameOrEmail, model.Password);
 
-            if (!await _authService.IsEmailConfirmedAsync(user))
-            {
-                return Unauthorized("Please verify your email before logging in.");
-            }
-
-            var result = await _authService.PasswordSignInAsync(model.Email, model.Password);
             if (result.Succeeded)
             {
+                var user = await _authService.FindByEmailOrUsernameAsync(model.UsernameOrEmail);
                 var roles = await _authService.GetRolesAsync(user);
                 var token = _authService.GenerateJwtToken(user, roles);
                 return Ok(new { Token = token });
@@ -87,6 +82,7 @@ namespace Backend.Controllers
 
             return Unauthorized("Invalid login attempt.");
         }
+
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()

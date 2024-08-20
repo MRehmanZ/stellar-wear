@@ -21,9 +21,12 @@ namespace Backend
 
             // Add services to the container.
             builder.Services.AddControllers();
+
+            // Configure Entity Framework Core with SQL Server
             builder.Services.AddDbContext<BackendDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
 
+            // Configure Identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
             {
                 options.User.RequireUniqueEmail = false; // for testing purposes
@@ -31,45 +34,50 @@ namespace Backend
                 .AddEntityFrameworkStores<BackendDbContext>()
                 .AddDefaultTokenProviders();
 
+            // Configure email settings from appsettings.json
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
+            // Add custom services (EmailService, AuthService)
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<AuthService>();
 
-
+            // Configure JWT authentication
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-                .AddJwtBearer(options =>
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                        ValidAudience = builder.Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-                    };
-                });
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                };
+            });
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            // Add Swagger/OpenAPI for API documentation
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Configure JSON serializer options
             builder.Services.AddControllersWithViews()
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
                 });
 
+            // Configure CORS to allow requests from the React frontend
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowReact", builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000") // Allow requests from React frontend
+                    builder.WithOrigins("http://localhost:5173") // Replace with your React frontend URL
                            .AllowAnyMethod()
                            .AllowAnyHeader();
                 });
@@ -77,28 +85,33 @@ namespace Backend
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            // Configure the HTTP request pipeline
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();  // For detailed exception info in development
+                app.UseSwagger();                 // Enable Swagger in development
+                app.UseSwaggerUI();               // Enable Swagger UI in development
+            }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            // Middleware pipeline
+            app.UseHttpsRedirection();            // Redirect HTTP requests to HTTPS
+            app.UseStaticFiles();                 // Serve static files
 
-            app.UseRouting();
+            app.UseRouting();                     // Enable routing
 
-            app.UseCors("AllowReact");
+            app.UseCors("AllowReact");            // Enable CORS for React frontend
 
+            app.UseAuthentication();              // Enable authentication
+            app.UseAuthorization();               // Enable authorization
+
+            // Set up routing for controllers
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            app.UseHttpsRedirection();
-            app.UseAuthentication(); // Add this line to enable authentication middleware
-            app.UseAuthorization();
-            
+            app.MapControllers();                 // Enable attribute routing
 
-            app.MapControllers();
-
+            // Database Migration and Seeding
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -106,8 +119,8 @@ namespace Backend
 
                 try
                 {
-                    context.Database.Migrate();
-                    Seeder.InitializeAsync(services).Wait(); // Wait for seeding to complete
+                    context.Database.Migrate();                // Apply any pending migrations
+                    Seeder.InitializeAsync(services).Wait();   // Seed the database
                 }
                 catch (Exception ex)
                 {
@@ -115,7 +128,8 @@ namespace Backend
                     logger.LogError(ex, "An error occurred seeding the Database.");
                 }
             }
-            app.Run();
+
+            app.Run();  // Run the application
         }
     }
 }

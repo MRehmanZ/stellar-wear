@@ -1,36 +1,41 @@
-﻿using MailKit.Net.Smtp;
-using MailKit.Security;
-using MimeKit;
+﻿using Backend.Services;
+using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
-using Backend.Services;
+using MimeKit;
 
-namespace Backend.Services
+public class EmailService
 {
-    public class EmailService
+    private readonly EmailSettings _emailSettings;
+
+    public EmailService(IOptions<EmailSettings> emailSettings)
     {
-        private readonly EmailSettings _emailSettings;
-        public EmailService(IOptions<EmailSettings> emailSettings)
+        _emailSettings = emailSettings.Value;
+    }
+
+    public async Task SendEmail(string toEmail, string subject, string body)
+    {
+        var emailMessage = new MimeMessage();
+        emailMessage.From.Add(new MailboxAddress("StellarWear", _emailSettings.SmtpUsername));
+        emailMessage.To.Add(new MailboxAddress("", toEmail));
+        emailMessage.Subject = subject;
+        emailMessage.Body = new TextPart("plain") { Text = body };
+
+        using (var client = new SmtpClient())
         {
-            _emailSettings = emailSettings.Value;
-        }
-        public void SendEmail(string toEmail, string subject, string body)
-        {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Support CareApp", _emailSettings.SmtpUsername));
-            message.To.Add(new MailboxAddress("Reciever Name", toEmail));
-            message.Subject = subject;
-            var textPart = new TextPart("plain")
+            try
             {
-                Text = body
-            };
-            message.Body = textPart;
-            using (var client = new SmtpClient())
+                await client.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, false);
+                await client.AuthenticateAsync(_emailSettings.SmtpUsername, _emailSettings.SmtpPassword);
+                await client.SendAsync(emailMessage);
+            }
+            catch (Exception ex)
             {
-                client.Connect(_emailSettings.SmtpServer, _emailSettings.SmtpPort,
-               SecureSocketOptions.StartTls);
-                client.Authenticate(_emailSettings.SmtpUsername, _emailSettings.SmtpPassword);
-                client.Send(message);
-                client.Disconnect(true);
+                // Log the exception details here
+                throw new Exception("An error occurred while sending email", ex);
+            }
+            finally
+            {
+                await client.DisconnectAsync(true);
             }
         }
     }

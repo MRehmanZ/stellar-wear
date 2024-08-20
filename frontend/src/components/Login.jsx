@@ -1,98 +1,63 @@
 import React, { useState } from "react";
-import "./login.css";
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { login } from "../services/AuthService";
 
-function Login({ onLogin }) {
-  const [username, setUsername] = useState("");
+function Login() {
+  const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isMousedOver, setMouseOver] = useState(false);
+  const navigate = useNavigate();
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleChange = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    if (username === "user" && password === "password") {
-      onLogin();
-    } else {
-      alert("Invalid details");
+    try {
+      const response = await login({ usernameOrEmail, password });
+      console.log("Login successful:", response);
+      toast.success("Login successful!");
+      navigate("/");
+    } catch (error) {
+      console.error("Login failed:", error);
+      toast.error("Login failed. Please check your credentials and try again.");
     }
   };
 
-  function handleMouseOver() {
-    setMouseOver(true);
-  }
-
-  function handleMouseOut() {
-    setMouseOver(false);
-  }
-
   return (
-    <div className="grid w-full min-h-screen grid-cols-1 lg:grid-cols-2">
-      <div className="flex items-center justify-center bg-muted p-6 lg:p-10">
-        <div className="mx-auto w-full max-w-[400px] space-y-6">
-          <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-bold">Welcome Back!</h1>
-            <p className="text-muted-foreground">
-              Enter your details to access your account.
-            </p>
-          </div>
-          <form className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="#"
-                  className="text-sm font-medium underline underline-offset-4"
-                  prefetch={false}
-                >
-                  Forgot password?
-                </Link>
-              </div>
-              <Input id="password" type="password" required />
-            </div>
-            <Link to="/">
-              <Button type="submit" className="w-full">
-                Sign in
-              </Button>
-            </Link>
-          </form>
+    <div className="flex h-full w-full mt-20 justify-center bg-background">
+      <div className="w-full max-w-md space-y-6">
+        <div className="space-y-2 text-center">
+          <h1 className="text-3xl font-bold">Login</h1>
+          <p className="text-muted-foreground">
+            Enter your username or email and password to log in.
+          </p>
         </div>
-      </div>
-      <div className="flex items-center justify-center bg-primary p-6 lg:p-10">
-        <div className="mx-auto w-full max-w-[400px] space-y-6 text-primary-foreground">
-          <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-bold">New Customer</h1>
-            <p className="text-muted-primary-foreground">
-              Register with Stellar Wear today
-            </p>
+        <form className="grid gap-4" onSubmit={handleLogin}>
+          <div className="grid gap-2">
+            <Label htmlFor="usernameOrEmail">Username or Email</Label>
+            <Input
+              id="usernameOrEmail"
+              placeholder="Username or Email"
+              value={usernameOrEmail}
+              onChange={(e) => setUsernameOrEmail(e.target.value)}
+              required
+            />
           </div>
-          <Link
-            to="/register"
-            className="inline-flex w-full items-center justify-center rounded-md bg-primary-foreground px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/90 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-            prefetch={false}
-          >
-            Sign up
-          </Link>
-        </div>
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <Button type="submit" className="w-full bg-slate-950">
+            Login
+          </Button>
+        </form>
       </div>
     </div>
   );

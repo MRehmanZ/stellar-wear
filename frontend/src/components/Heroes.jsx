@@ -1,5 +1,5 @@
 import React from 'react';
-import './heroes.css';
+import './styles/heroes.css';
 
 const Heroes = ({ title, subtitle, imageUrl, linkUrl }) => {
   return (

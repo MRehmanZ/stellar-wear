@@ -31,7 +31,7 @@ function Cart() {
           <div key={item.id} className="item">
             <div className="item-details">
               <strong>{item.name}</strong>
-              <div>${item.price.toFixed(2)} x {item.quantity} = ${(item.price * item.quantity).toFixed(2)}</div>
+              <div>£{item.price.toFixed(2)} x {item.quantity} = £{(item.price * item.quantity).toFixed(2)}</div>
             </div>
             <div className="quantity-control">
               <button onClick={() => updateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1}>
@@ -48,7 +48,7 @@ function Cart() {
         ))}
       </div>
       <div className="total">
-        <strong>Total:</strong> ${total.toFixed(2)}
+        <strong>Total:</strong> £{total.toFixed(2)}
       </div>
     </div>
   );

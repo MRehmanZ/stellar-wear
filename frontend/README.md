@@ -1,0 +1,22 @@
+# Planning
+
+- [x] Create a basic Navbar
+- [] Setup tailwind CSS for styling
+- [] Setup shadcn/ui to create styling components 
+- [] Implemnt a Navbar which includes navigation tabs, search, cart, auth buttons
+- [] Create a banner/hero section 
+- [] Display featured products 
+- [] Free shipping and newsletter sign up section
+- [] Products list page
+- [] Filter options and view change for product lists
+- [] Product page
+- [] Checkout page
+- [] Payment integration
+- [] Email for verification and order confirmation  
+- [] Create login, logout, and register (storing token in localstorage)
+- [] Error handling for authentication and other controllers (toast)
+- [] Compatible with Mobile and Tablet
+- [] Make use of 'alt=' to improve accessibility
+- [] Add pagination
+- [] Use of react widgets and tabs
+- [] Integration of a Maps API - store locator

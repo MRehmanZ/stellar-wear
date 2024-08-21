@@ -31,3 +31,15 @@ export const logout = async () => {
     throw error.response?.data || error.message;
   }
 };
+
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+  },
+});
+
+export const getProtectedData = async () => {
+  const response = await api.get('/protected-data');
+  return response.data;
+};

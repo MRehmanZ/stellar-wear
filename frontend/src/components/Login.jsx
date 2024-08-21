@@ -15,7 +15,7 @@ function Login() {
     event.preventDefault();
     try {
       const response = await login({ usernameOrEmail, password });
-      console.log("Login successful:", response);
+      localStorage.setItem("token", response.Token);
       toast.success("Login successful!");
       navigate("/");
     } catch (error) {

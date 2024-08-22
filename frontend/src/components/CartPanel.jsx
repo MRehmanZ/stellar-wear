@@ -2,9 +2,12 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 import { FaTimes } from 'react-icons/fa';
 import './styles/CartPanel.css';
+import { Link } from 'react-router-dom';
 
 const CartPanel = ({ isOpen, onClose }) => {
   const { cartItems, removeFromCart } = useCart();
+
+  const totalAmount = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <div className={`cart-panel ${isOpen ? 'open' : ''}`}>
@@ -32,6 +35,15 @@ const CartPanel = ({ isOpen, onClose }) => {
             ))}
           </ul>
         )}
+        <div className="cart-total">
+          <h3>Total: £{totalAmount.toFixed(2)}</h3>
+        </div>
+        <div className="cart-actions">
+            <Link to="/checkout">
+          <button className="checkout-button">Proceed to Checkout</button>
+
+            </Link>
+        </div>
       </div>
     </div>
   );

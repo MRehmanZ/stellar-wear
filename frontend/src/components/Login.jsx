@@ -5,11 +5,13 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { login } from "../services/AuthService";
+import { useAuth } from "../hooks/useAuth";
 
 function Login() {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const {login} = useAuth()
 
   const handleLogin = async (event) => {
     event.preventDefault();

@@ -20,7 +20,7 @@ function App() {
   return (
     <CartProvider> {/* Wrap the app with CartProvider */}
       <Router>
-        <NavBar isLoggedIn={isLoggedIn} />
+        <NavBar isLoggedIn={isLoggedIn} className="sticky"/>
         <Toaster />
         <div>
           <Routes>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(BackendDbContext))]
-    [Migration("20240821103911_InitialCreate0")]
-    partial class InitialCreate0
+    [Migration("20240822150658_featuredProducts")]
+    partial class featuredProducts
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,6 +170,9 @@ namespace Backend.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("ProductId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -177,18 +180,23 @@ namespace Backend.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId1");
 
                     b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("Backend.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -204,6 +212,12 @@ namespace Backend.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isFeatured")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -358,7 +372,7 @@ namespace Backend.Migrations
 
                     b.HasOne("Backend.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

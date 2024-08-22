@@ -1,6 +1,6 @@
-@AuctionBackend_HostAddress = http://localhost:5294
+@Backend_HostAddress = http://localhost:5173
 
-GET {{AuctionBackend_HostAddress}}/weatherforecast/
+GET {{Backend_HostAddress}}/
 Accept: application/json
 
 ###

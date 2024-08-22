@@ -10,6 +10,16 @@
   background-color: black; /* Fallback background color */
 }
 
+.text-on-media h1 {
+  font-size: 3rem; /* Adjust font size */
+  margin-bottom: 1rem;
+}
+
+.text-on-media p {
+  font-size: 1.5rem; /* Adjust font size */
+  margin-bottom: 1rem;
+}
+
 .heroes-video {
   position: absolute;
   top: 0;

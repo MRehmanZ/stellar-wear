@@ -58,3 +58,8 @@
     --chart-5: 340 75% 55%;
   }
 }
+
+body {
+  background: linear-gradient(135deg, #f3f3f3 0%, #ffffff 100%);
+}
+

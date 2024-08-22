@@ -15,10 +15,11 @@ namespace Backend.Controllers
             _context = context;
         }
 
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public ActionResult<IEnumerable<Product>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            return _context.Products.ToList();
         }
 
         [HttpGet("{id}")]

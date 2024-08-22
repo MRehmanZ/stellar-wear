@@ -1,0 +1,92 @@
+import React, { useEffect, useState } from 'react';
+import { getProducts } from '../services/ProductService';
+import './styles/ProductsList.css';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { FaStar } from "react-icons/fa";
+
+const ProductsPage = () => {
+  const [products, setProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const productsData = await getProducts();
+        setProducts(productsData.$values);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const filteredProducts = selectedCategory === 'All' 
+    ? products 
+    : products.filter(product => product.category === selectedCategory);
+
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <FaStar
+          key={i}
+          className={`w-4 h-4 ${i <= rating ? 'fill-primary' : 'fill-muted stroke-muted-foreground'}`}
+        />
+      );
+    }
+    return stars;
+  };
+
+  return (
+    <div>
+      <h1 className="text-3xl font-bold mb-6">Products</h1>
+      
+      <div className="mb-6">
+        <label htmlFor="category">Filter by Category:</label>
+        <select 
+          id="category"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="ml-2 p-2 border rounded"
+        >
+          <option value="All">All</option>
+          <option value="Suits">Suits</option>
+          <option value="Ties">Ties</option>
+          <option value="Shoes">Shoes</option>
+        </select>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {filteredProducts.map(product => (
+          <div key={product.id} className="group relative rounded-lg overflow-hidden shadow-lg transition-all hover:shadow-xl">
+            <img
+              src={"https://localhost:7233/" + product.imageUrl}
+              alt={product.name}
+              width={400}
+              height={400}
+              className="w-full h-[300px] object-cover group-hover:opacity-80 transition-opacity"
+            />
+            <div className="p-4 bg-background">
+              <h3 className="text-lg font-semibold text-foreground line-clamp-1">{product.name}</h3>
+              <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{product.description}</p>
+              <div className="flex items-center gap-1 mt-2">
+                {renderStars(product.rating)}
+              </div>
+              <div className="flex items-center justify-between mt-4">
+                <span className="text-2xl font-bold text-primary">£{product.price}</span>
+                <div className="flex items-center gap-2">
+                  <Button size="sm">Add to Cart</Button>
+                  <Input type="number" defaultValue={1} className="w-16" />
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ProductsPage;

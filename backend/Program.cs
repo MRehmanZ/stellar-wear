@@ -111,7 +111,6 @@ namespace Backend
 
             app.MapControllers();                 // Enable attribute routing
 
-            // Database Migration and Seeding
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -119,13 +118,13 @@ namespace Backend
 
                 try
                 {
-                    context.Database.Migrate();                // Apply any pending migrations
-                    Seeder.InitializeAsync(services).Wait();   // Seed the database
+                    context.Database.Migrate();
+                    ProductSeeder.SeedAsync(services).Wait(); // Run the product seeder
                 }
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred seeding the Database.");
+                    logger.LogError(ex, "An error occurred seeding the database.");
                 }
             }
 

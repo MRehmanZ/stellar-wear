@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHeart, FaUserCircle, FaShoppingCart, FaBars, FaTimes } from 'react-icons/fa';
 import { SiStylelint } from "react-icons/si";
-import CartPanel from './CartPanel'; // Import CartPanel
+import { useCart } from '../context/CartContext';
+import CartPanel from './CartPanel';
 
 const NavBar = ({ isLoggedIn }) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false); // State for cart panel
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { cartItems } = useCart();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -18,14 +20,15 @@ const NavBar = ({ isLoggedIn }) => {
   };
 
   const handleLogout = () => {
-    // Handle logout logic
     setIsMenuOpen(false);
     navigate('/login');
   };
 
+  const cartItemCount = Array.isArray(cartItems) ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
+
   return (
     <>
-      <nav className="bg-gray-800 text-white p-4 shadow-md flex items-center justify-between">
+      <nav className="sticky top-0 bg-gray-800 text-white p-4 shadow-md flex items-center justify-between z-50">
         <div className="md:hidden">
           <button onClick={toggleMenu} className="text-2xl">
             {isMenuOpen ? <FaTimes /> : <FaBars />}
@@ -60,9 +63,14 @@ const NavBar = ({ isLoggedIn }) => {
               Login
             </Link>
           )}
-          <button onClick={toggleCart} className="hover:text-gray-300 flex items-center">
+          <button onClick={toggleCart} className="relative hover:text-gray-300 flex items-center">
             <FaShoppingCart className="mr-1" />
             Cart
+            {cartItemCount > 0 && (
+              <span className="absolute top-0 right-0 bg-red-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
           </button>
         </div>
 

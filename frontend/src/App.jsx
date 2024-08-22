@@ -8,6 +8,7 @@ import Register from "./components/Register";
 import ProductsPage from "./components/ProductsPage";
 import Cart from "./components/Cart";
 import { Toaster } from "sonner";
+import { CartProvider } from './context/CartContext'; // Import CartProvider
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -17,19 +18,21 @@ function App() {
   };
 
   return (
-    <Router>
-      <NavBar isLoggedIn={isLoggedIn} />
-      <Toaster />
-      <div>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route exact path="/register" element={<Register />} />
-          <Route exact path="/products" element={<ProductsPage />} />
-          <Route exact path="/cart" element={<Cart />} />
-        </Routes>
-      </div>
-    </Router>
+    <CartProvider> {/* Wrap the app with CartProvider */}
+      <Router>
+        <NavBar isLoggedIn={isLoggedIn} />
+        <Toaster />
+        <div>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route exact path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route exact path="/register" element={<Register />} />
+            <Route exact path="/products" element={<ProductsPage />} />
+            <Route exact path="/cart" element={<Cart />} />
+          </Routes>
+        </div>
+      </Router>
+    </CartProvider>
   );
 }
 

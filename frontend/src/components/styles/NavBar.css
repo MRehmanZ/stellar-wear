@@ -1,12 +1,14 @@
+/* Navbar.css or your main CSS file */
 .navbar {
-    background-color: #1a202c; /* Tailwind's bg-gray-800 */
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Ensures it stays on top of other content */
+    background-color: #333; /* Or whatever background you prefer */
     padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: adds a shadow for better visibility */
   }
+  
   
   .navbar-links a,
   .navbar-icons a {

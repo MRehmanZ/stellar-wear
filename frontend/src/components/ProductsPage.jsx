@@ -4,10 +4,12 @@ import './styles/ProductsList.css';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FaStar } from "react-icons/fa";
+import { useCart } from '../context/CartContext'; // Import useCart
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const { addToCart } = useCart(); // Access addToCart from context
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -21,10 +23,6 @@ const ProductsPage = () => {
 
     fetchProducts();
   }, []);
-
-  const filteredProducts = selectedCategory === 'All' 
-    ? products 
-    : products.filter(product => product.category === selectedCategory);
 
   const renderStars = (rating) => {
     const stars = [];
@@ -59,7 +57,7 @@ const ProductsPage = () => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredProducts.map(product => (
+        {products.map(product => (
           <div key={product.id} className="group relative rounded-lg overflow-hidden shadow-lg transition-all hover:shadow-xl">
             <img
               src={"https://localhost:7233/" + product.imageUrl}
@@ -77,7 +75,7 @@ const ProductsPage = () => {
               <div className="flex items-center justify-between mt-4">
                 <span className="text-2xl font-bold text-primary">£{product.price}</span>
                 <div className="flex items-center gap-2">
-                  <Button size="sm">Add to Cart</Button>
+                  <Button size="sm" onClick={() => addToCart(product)}>Add to Cart</Button>
                   <Input type="number" defaultValue={1} className="w-16" />
                 </div>
               </div>

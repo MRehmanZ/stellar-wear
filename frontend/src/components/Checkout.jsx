@@ -45,6 +45,7 @@ const Checkout = () => {
         }),
       });
   
+      console.log(orderResponse)
       const orderData = await orderResponse.json();
       console.log(orderData)
   

@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 
 namespace Backend.Models
 {
@@ -10,7 +8,6 @@ namespace Backend.Models
     {
         public BackendDbContext(DbContextOptions<BackendDbContext> options) : base(options) { }
 
-        // Define DbSets for your entities
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
@@ -40,7 +37,6 @@ namespace Backend.Models
                 entity.Property(p => p.IsFeatured).HasDefaultValue(false);
             });
 
-            // Configure Order
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.ToTable("Orders");
@@ -60,7 +56,7 @@ namespace Backend.Models
             modelBuilder.Entity<OrderItem>(entity =>
             {
                 entity.ToTable("OrderItems");
-                entity.HasKey(oi => oi.Id); // Using Id as the primary key
+                entity.HasKey(oi => oi.Id); // Assuming the use of a primary key on Id
                 entity.Property(oi => oi.ProductName).IsRequired().HasMaxLength(200);
                 entity.Property(oi => oi.Price).HasColumnType("decimal(18,2)");
                 entity.Property(oi => oi.Quantity).IsRequired();
@@ -71,7 +67,7 @@ namespace Backend.Models
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(oi => oi.Product)
-                      .WithMany()
+                      .WithMany() // Assuming no navigation property back to OrderItem
                       .HasForeignKey(oi => oi.ProductId)
                       .OnDelete(DeleteBehavior.Cascade);
             });

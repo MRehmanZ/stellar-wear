@@ -8,6 +8,7 @@
   align-items: center;
   justify-content: center;
   background-color: black; /* Fallback background color */
+  z-index: 10;
 }
 
 .text-on-media h1 {
@@ -28,7 +29,7 @@
   height: 100%;
   object-fit: cover;  /* Ensure the video covers the entire height */
   object-position: center top;  /* Align the video to the top center */
-  z-index: 0;
+  z-index: 1;
 }
 
 .heroes-image {

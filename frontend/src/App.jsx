@@ -12,6 +12,9 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { AuthProvider } from "./hooks/useAuth";
 import { CartProvider } from "./context/CartContext";
+import OrdersPage from "./components/OrdersPage";
+import OrderDetails from "./components/OrderDetails";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Load Stripe with your publishable key
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -34,12 +37,14 @@ function App() {
             exact 
             path="/checkout" 
             element={
-              <Elements stripe={stripePromise}>
-                <Checkout />
-              </Elements>
+               <Elements stripe={stripePromise}>
+                <ProtectedRoute element={<Checkout />} /> 
+              </Elements> 
             } 
           />
           <Route exact path="/order-confirmation" element={<OrderConfirmation />} />
+          <Route exact path="/orders" element={<OrdersPage />} />
+          <Route exact path="/order/:orderId" element={<OrderDetails />} />
         </Routes>
       </div>
     </Router>

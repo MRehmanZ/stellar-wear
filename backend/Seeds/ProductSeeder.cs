@@ -32,7 +32,7 @@ namespace Backend.Seeds
                     Category = "Suits",
                     Rating = 4,
                     ImageUrl = "/images/products/black-suit.jpg",
-                    isFeatured = true,
+                    IsFeatured = true,
                 },
                 new Product
                 {
@@ -43,7 +43,7 @@ namespace Backend.Seeds
                     Category = "Ties",
                     Rating = 5,
                     ImageUrl = "/images/products/blue-tie.jpg",
-                    isFeatured = true,
+                    IsFeatured = true,
                 },
                 new Product
                 {
@@ -54,7 +54,7 @@ namespace Backend.Seeds
                     Category = "Shoes",
                     Rating = 5,
                     ImageUrl = "/images/products/brown-leather-shoes.jpg",
-                    isFeatured = true,
+                    IsFeatured = true,
                 },
                 new Product
                 {

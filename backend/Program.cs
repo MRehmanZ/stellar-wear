@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Stripe;
 
 namespace Backend
 {
@@ -17,6 +18,7 @@ namespace Backend
     {
         public static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -39,7 +41,10 @@ namespace Backend
 
             // Add custom services (EmailService, AuthService)
             builder.Services.AddScoped<EmailService>();
+            builder.Services.AddScoped<PaymentService>();
             builder.Services.AddScoped<AuthService>();
+
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
             // Configure JWT authentication
             builder.Services.AddAuthentication(options =>

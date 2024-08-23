@@ -40,8 +40,7 @@ const CartPanel = ({ isOpen, onClose }) => {
         </div>
         <div className="cart-actions">
             <Link to="/checkout">
-          <button className="checkout-button">Proceed to Checkout</button>
-
+                <button className="checkout-button">Proceed to Checkout</button>
             </Link>
         </div>
       </div>

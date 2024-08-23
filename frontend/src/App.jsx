@@ -1,38 +1,51 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import "./App.css";
+import { Toaster } from "sonner";
 import NavBar from "./components/NavBar";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import ProductsPage from "./components/ProductsPage";
 import Cart from "./components/Cart";
-import { Toaster } from "sonner";
-import { CartProvider } from './context/CartContext'; // Import CartProvider
+import Checkout from "./components/Checkout";
+import OrderConfirmation from "./components/OrderConfirmation";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { AuthProvider } from "./hooks/useAuth";
+import { CartProvider } from "./context/CartContext";
+
+// Load Stripe with your publishable key
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
-
   return (
-    <CartProvider> {/* Wrap the app with CartProvider */}
+    <AuthProvider>
+      <CartProvider>
       <Router>
-        <NavBar isLoggedIn={isLoggedIn} className="sticky"/>
-        <Toaster />
-        <div>
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route exact path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route exact path="/register" element={<Register />} />
-            <Route exact path="/products" element={<ProductsPage />} />
-            <Route exact path="/cart" element={<Cart />} />
-          </Routes>
-        </div>
-      </Router>
-    </CartProvider>
+      <NavBar />
+      <Toaster />
+      <div>
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/register" element={<Register />} />
+          <Route exact path="/cart" element={<Cart />} />
+          {/* Wrap the Checkout component with Elements */}
+          <Route 
+            exact 
+            path="/checkout" 
+            element={
+              <Elements stripe={stripePromise}>
+                <Checkout />
+              </Elements>
+            } 
+          />
+          <Route exact path="/order-confirmation" element={<OrderConfirmation />} />
+        </Routes>
+      </div>
+    </Router>
+      </CartProvider>
+      </AuthProvider>
+    
   );
 }
 

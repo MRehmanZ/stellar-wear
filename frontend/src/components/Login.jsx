@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { login } from "../services/AuthService";
+import { loginUser } from "../services/AuthService";
 import { useAuth } from "../hooks/useAuth";
 
 function Login() {
@@ -17,7 +17,8 @@ function Login() {
     event.preventDefault();
     try {
       const response = await login({ usernameOrEmail, password });
-      localStorage.setItem("token", response.Token);
+      console.log(response.token)
+      localStorage.setItem("token", response.token);
       toast.success("Login successful!");
       navigate("/");
     } catch (error) {

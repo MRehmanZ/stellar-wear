@@ -26,7 +26,7 @@ namespace Backend.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public Boolean isFeatured { get; set; } = false;
+        public Boolean IsFeatured { get; set; } = false;
     }
 
 }

@@ -2,12 +2,17 @@
 {
     public class OrderItem
     {
-        public int Id { get; set; }
-        public int OrderId { get; set; }
-        public Order Order { get; set; }
-        public int ProductId { get; set; }
-        public Product Product { get; set; }
-        public int Quantity { get; set; }
-        public decimal Price { get; set; }
+        public Guid Id { get; set; } // Unique identifier for the order item
+
+        public Guid OrderId { get; set; } // ID of the associated order
+        public Guid ProductId { get; set; } // ID of the associated product
+
+        public string ProductName { get; set; } // Name of the product
+        public decimal Price { get; set; } // Price of the product at the time of the order
+        public int Quantity { get; set; } // Quantity of the product in the order
+
+        public Order Order { get; set; } // Navigation property for the associated order
+        public Product Product { get; set; } // Navigation property for the associated product
     }
+
 }

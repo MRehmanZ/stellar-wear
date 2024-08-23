@@ -68,16 +68,20 @@ namespace Backend.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login(LoginModel model)
         {
-            var result = await _authService.PasswordSignInAsync(model.UsernameOrEmail, model.Password);
+            var user = await _authService.FindByEmailOrUsernameAsync(model.UsernameOrEmail);
+            if (user == null)
+            {
+                return Unauthorized("Invalid login attempt.");
+            }
 
+            var result = await _authService.PasswordSignInAsync(user.UserName, model.Password);
             if (result.Succeeded)
             {
-                var user = await _authService.FindByEmailOrUsernameAsync(model.UsernameOrEmail);
                 var roles = await _authService.GetRolesAsync(user);
                 var token = _authService.GenerateJwtToken(user, roles);
-                return Ok(new { Token = token });
+                return Ok(new { Token = token, UserId = user.Id }); // Return UserId
             }
 
             return Unauthorized("Invalid login attempt.");

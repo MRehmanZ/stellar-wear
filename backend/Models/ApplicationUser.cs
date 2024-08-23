@@ -1,5 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 
-public class ApplicationUser : IdentityUser<Guid>
-{}
+namespace Backend.Models
+{
+    public class ApplicationUser : IdentityUser<Guid>
+    {
+
+
+        // Navigation properties
+        public ICollection<Order> Orders { get; set; }
+    }
+}
+
+

@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHeart, FaUserCircle, FaShoppingCart, FaBars, FaTimes } from 'react-icons/fa';
 import { SiStylelint } from "react-icons/si";
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../hooks/useAuth'; // Import the useAuth hook
 import CartPanel from './CartPanel';
 
-const NavBar = ({ isLoggedIn }) => {
+const NavBar = () => {
   const navigate = useNavigate();
+  const { isLoggedIn, logout } = useAuth(); // Get the logout function and isLoggedIn state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { cartItems } = useCart();
@@ -20,7 +22,7 @@ const NavBar = ({ isLoggedIn }) => {
   };
 
   const handleLogout = () => {
-    setIsMenuOpen(false);
+    logout();
     navigate('/login');
   };
 
@@ -28,7 +30,7 @@ const NavBar = ({ isLoggedIn }) => {
 
   return (
     <>
-      <nav className="sticky top-0 bg-gray-800 text-white p-4 shadow-md flex items-center justify-between z-50">
+      <nav className="sticky bg-gray-800 text-white p-4 shadow-md flex items-center justify-between">
         <div className="md:hidden">
           <button onClick={toggleMenu} className="text-2xl">
             {isMenuOpen ? <FaTimes /> : <FaBars />}

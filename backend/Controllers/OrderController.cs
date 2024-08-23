@@ -19,13 +19,13 @@ namespace Backend.Controllers
     {
         private readonly BackendDbContext _context;
         private readonly PaymentService _paymentService;
-        private readonly ILogger<OrderController> _logger;
+        //private readonly ILogger<OrderController> _logger;
 
         public OrderController(BackendDbContext context, PaymentService paymentService, ILogger<OrderController> logger)
         {
             _context = context;
             _paymentService = paymentService;
-            _logger = logger;
+            //_logger = logger;
         }
 
         [HttpPost("create-order")]
@@ -42,8 +42,6 @@ namespace Backend.Controllers
             {
                 return BadRequest("User not found.");
             }
-
-            model.PaymentIntentId = "pending";
 
             // Create the Order
             var order = new Order
@@ -71,6 +69,7 @@ namespace Backend.Controllers
 
             return Ok(new { OrderId = order.Id });
         }
+
 
 
         [HttpPost("create-payment-intent")]
@@ -121,7 +120,7 @@ namespace Backend.Controllers
             catch (Exception ex)
             {
                 // Log the exception and return a proper error message
-                _logger.LogError(ex, "Error creating payment intent.");
+                //_logger.LogError(ex, "Error creating payment intent.");
                 return StatusCode(500, "An error occurred while creating the payment intent.");
             }
         }

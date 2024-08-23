@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getProducts } from '../services/ProductService';
-import './styles/ProductsList.css';
+// import './styles/ProductsList.css';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FaStar } from "react-icons/fa";

@@ -1,17 +1,18 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaHeart, FaUserCircle, FaShoppingCart, FaBars, FaTimes } from 'react-icons/fa';
+import { FaHeart, FaUserCircle, FaShoppingCart, FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { SiStylelint } from "react-icons/si";
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../hooks/useAuth'; // Import the useAuth hook
+import { useAuth } from '../hooks/useAuth';
 import CartPanel from './CartPanel';
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, logout } = useAuth(); // Get the logout function and isLoggedIn state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { cartItems } = useCart();
+  const { isLoggedIn, logout } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -19,6 +20,10 @@ const NavBar = () => {
 
   const toggleCart = () => {
     setIsCartOpen(!isCartOpen);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   const handleLogout = () => {
@@ -30,7 +35,7 @@ const NavBar = () => {
 
   return (
     <>
-      <nav className="sticky bg-gray-800 text-white p-4 shadow-md flex items-center justify-between">
+      <nav className="sticky top-0 bg-gray-800 text-white p-4 shadow-md flex items-center justify-between z-50">
         <div className="md:hidden">
           <button onClick={toggleMenu} className="text-2xl">
             {isMenuOpen ? <FaTimes /> : <FaBars />}
@@ -48,23 +53,50 @@ const NavBar = () => {
           <Link to="/new-in" className="hover:text-gray-300">New In</Link>
           <Link to="/mens" className="hover:text-gray-300">Mens</Link>
           <Link to="/collections" className="hover:text-gray-300">Collections</Link>
-          <Link to="/outfit-builder" className="hover:text-gray-300">Outfit Builder</Link>
-          <Link to="/outlet" className="hover:text-gray-300">Outlet</Link>
           <Link to="/wishlist" className="hover:text-gray-300 flex items-center">
             <FaHeart className="mr-1" />
             Wishlist
           </Link>
-          {isLoggedIn ? (
-            <button onClick={handleLogout} className="hover:text-gray-300 flex items-center">
+          <div className="relative">
+            <button
+              onClick={toggleDropdown}
+              className="hover:text-gray-300 flex items-center focus:outline-none"
+            >
               <FaUserCircle className="mr-1" />
-              Logout
+              Account <FaChevronDown className="ml-1" />
             </button>
-          ) : (
-            <Link to="/login" className="hover:text-gray-300 flex items-center">
-              <FaUserCircle className="mr-1" />
-              Login
-            </Link>
-          )}
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg z-20">
+                <Link
+                  to={isLoggedIn ? '/profile' : '/login'}
+                  onClick={toggleDropdown}
+                  className="block px-4 py-2 hover:bg-gray-200"
+                >
+                  {isLoggedIn ? 'Profile' : 'Login'}
+                </Link>
+                {isLoggedIn && (
+                  <>
+                    <Link
+                      to="/orders"
+                      onClick={toggleDropdown}
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
+                      Orders
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        toggleDropdown();
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-200"
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
           <button onClick={toggleCart} className="relative hover:text-gray-300 flex items-center">
             <FaShoppingCart className="mr-1" />
             Cart
@@ -88,12 +120,18 @@ const NavBar = () => {
               <li><Link to="/outfit-builder" onClick={toggleMenu} className="hover:text-gray-300">Outfit Builder</Link></li>
               <li><Link to="/outlet" onClick={toggleMenu} className="hover:text-gray-300">Outlet</Link></li>
               <li><Link to="/wishlist" onClick={toggleMenu} className="hover:text-gray-300">Wishlist</Link></li>
-              {isLoggedIn ? (
-                <li><button onClick={() => { handleLogout(); toggleMenu(); }} className="hover:text-gray-300">Logout</button></li>
-              ) : (
-                <li><Link to="/login" onClick={toggleMenu} className="hover:text-gray-300">Login</Link></li>
-              )}
               <li><button onClick={toggleCart} className="hover:text-gray-300 flex items-center">Cart</button></li>
+              <li>
+                <button
+                  onClick={() => {
+                    isLoggedIn ? handleLogout() : navigate('/login');
+                    toggleMenu();
+                  }}
+                  className="hover:text-gray-300"
+                >
+                  {isLoggedIn ? 'Logout' : 'Login'}
+                </button>
+              </li>
             </ul>
           </div>
         )}

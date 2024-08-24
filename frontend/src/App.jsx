@@ -20,6 +20,7 @@ import ManageProducts from "./components/admin/ManageProducts";
 import UsersPage from "./components/admin/UsersPage";
 import AdminDashboardLayout from "./components/admin/AdminDashboardLayout";
 import ProductsPage from "./components/ProductsPage";
+import Footer from "./components/Footer";
 
 // Load Stripe with your publishable key
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -58,6 +59,7 @@ function App() {
         </Route>
         </Routes>
       </div>
+      <Footer />
     </Router>
       </CartProvider>
       </AuthProvider>

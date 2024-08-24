@@ -39,10 +39,13 @@ namespace Backend
             // Configure email settings from appsettings.json
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
+            builder.Services.AddHttpClient();
+
             // Add custom services (EmailService, AuthService)
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<PaymentService>();
             builder.Services.AddScoped<AuthService>();
+            builder.Services.AddScoped<InstagramService>();
 
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 

@@ -203,10 +203,11 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Order>> GetOrders()
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            return _context.Orders.ToList();
+            return await _context.Orders.Include(o => o.OrderItems).ToListAsync();
         }
+
     }
 
     public class ConfirmPaymentRequest

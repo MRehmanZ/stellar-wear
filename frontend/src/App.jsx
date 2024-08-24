@@ -15,6 +15,10 @@ import { CartProvider } from "./context/CartContext";
 import OrdersPage from "./components/OrdersPage";
 import OrderDetails from "./components/OrderDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminDashboard from "./components/admin/AdminDashboard";
+import ProductsPage from "./components/admin/ProductsPage";
+import UsersPage from "./components/admin/UsersPage";
+import AdminDashboardLayout from "./components/admin/AdminDashboardLayout";
 
 // Load Stripe with your publishable key
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -45,6 +49,11 @@ function App() {
           <Route exact path="/order-confirmation" element={<OrderConfirmation />} />
           <Route exact path="/orders" element={<OrdersPage />} />
           <Route exact path="/order/:orderId" element={<OrderDetails />} />
+          <Route path="/admin" element={<AdminDashboardLayout />}>
+            <Route path="products" element={<ProductsPage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="orders" element={<OrdersPage />} />
+        </Route>
         </Routes>
       </div>
     </Router>

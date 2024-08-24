@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-const ProductsPage = () => {
+const ManageProducts = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
@@ -62,4 +62,4 @@ const ProductsPage = () => {
   );
 };
 
-export default ProductsPage;
+export default ManageProducts;

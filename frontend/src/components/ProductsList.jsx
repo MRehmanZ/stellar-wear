@@ -5,11 +5,13 @@ import { FaStar } from "react-icons/fa";
 import { useCart } from '../context/CartContext';
 import { Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
   const { addToCart } = useCart();
+  const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -23,6 +25,18 @@ const ProductsList = () => {
 
     fetchProducts();
   }, []);
+
+  const handleQuantityChange = (productId, quantity) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [productId]: quantity,
+    }));
+  };
+
+  const handleAddToCart = (product) => {
+    const quantity = quantities[product.id] || 1; // Get the specified quantity or default to 1
+    addToCart(product, quantity); // Add the product to the cart with the specified quantity
+  };
 
   const renderStars = (rating) => {
     return [...Array(5)].map((_, i) => (
@@ -51,7 +65,7 @@ const ProductsList = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-lg">{product.name}</h3>
-                <Badge variant="secondary">Office</Badge>
+                <Badge variant="secondary">{product.category}</Badge>
               </div>
               <div className="flex items-center space-x-1">
                 {renderStars(product.rating)}
@@ -65,13 +79,18 @@ const ProductsList = () => {
           <CardFooter className="p-4 pt-0">
             <div className="flex items-center justify-between w-full">
               <span className="text-xl font-bold">£{product.price}</span>
-              <Button
-                className="bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                style={{ padding: "6px 12px", minWidth: "auto" }}  // Explicitly set the width
-                onClick={() => addToCart(product)}
-              >
-                Add to Cart
-              </Button>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  min="1"
+                  value={quantities[product.id] || 1}
+                  onChange={(e) => handleQuantityChange(product.id, parseInt(e.target.value))}
+                  className="border p-1 w-16"
+                />
+                <Button size="sm" onClick={() => handleAddToCart(product)}>
+                  Add to Cart
+                </Button>
+              </div>
             </div>
           </CardFooter>
         </Card>

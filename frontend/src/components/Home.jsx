@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getProducts } from '../services/ProductService';
-import ProductsList from './ProductsList';
+import ProductsList from './FeaturedProducts';
 import Heroes from './Heroes';
+import FeaturedProducts from './FeaturedProducts';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -28,8 +29,7 @@ const Home = () => {
         imageUrl="/Hero.jpg"
         linkUrl="/products"
       />
-      <h1 className="text-4xl font-bold mb-6">Featured Products</h1>
-      <ProductsList products={featuredProducts} />
+      <FeaturedProducts products={featuredProducts} />
       
       {/* Add more components like banners, collections, etc. */}
     </div>

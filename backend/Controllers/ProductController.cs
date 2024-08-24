@@ -15,7 +15,6 @@ namespace Backend.Controllers
             _context = context;
         }
 
-
         [HttpGet]
         public ActionResult<IEnumerable<Product>> GetProducts()
         {

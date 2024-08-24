@@ -77,6 +77,13 @@ const NavBar = () => {
                 {isLoggedIn && (
                   <>
                     <Link
+                      to="/admin"
+                      onClick={toggleDropdown}
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
+                      Admin Dashboard
+                    </Link>
+                    <Link
                       to="/orders"
                       onClick={toggleDropdown}
                       className="block px-4 py-2 hover:bg-gray-200"

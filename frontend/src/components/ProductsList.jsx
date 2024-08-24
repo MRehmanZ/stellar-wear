@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { getProducts } from '../services/ProductService';
-import './styles/ProductsList.css';
 import { Button } from "@/components/ui/button";
 import { FaStar } from "react-icons/fa";
 import { useCart } from '../context/CartContext';
+import { Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
@@ -23,45 +25,56 @@ const ProductsList = () => {
   }, []);
 
   const renderStars = (rating) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <FaStar
-          key={i}
-          className={`w-4 h-4 ${i <= rating ? 'fill-primary' : 'fill-muted stroke-muted-foreground'}`}
-        />
-      );
-    }
-    return stars;
+    return [...Array(5)].map((_, i) => (
+      <Star
+        key={i}
+        className={`w-4 h-4 ${i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+      />
+    ));
   };
 
   return (
-    <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
-      {products.map(product => (
-        <div key={product.id} className="group relative rounded-lg overflow-hidden shadow-lg transition-all hover:shadow-xl">
-          <img
-            src={"https://localhost:7233/" + product.imageUrl}
-            alt={product.name}
-            width={400}
-            height={400}
-            className="w-full h-[300px] object-cover group-hover:opacity-80 transition-opacity"
-            style={{ aspectRatio: "400/400", objectFit: "cover" }}
-          />
-          <div className="p-4 bg-background">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{product.category}</span>
-              <div className="flex items-center gap-0.5">
-                {renderStars(product.rating)}
+    <div className="grid space-y-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
+      {products.map(product => product.isFeatured && (
+        <Card className="w-full max-w-sm mx-auto" key={product.id}>
+          <CardContent className="p-4">
+            <div className="aspect-square relative mb-4">
+              <img
+                src={"https://localhost:7233/" + product.imageUrl}
+                alt={product.name}
+                width={400}
+                height={400}
+                className="w-full h-[300px] object-cover group-hover:opacity-80 transition-opacity"
+                style={{ aspectRatio: "400/400", objectFit: "cover" }}
+              />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-lg">{product.name}</h3>
+                <Badge variant="secondary">Office</Badge>
               </div>
+              <div className="flex items-center space-x-1">
+                {renderStars(product.rating)}
+                <span className="text-sm text-gray-600 ml-2">{product.rating.toFixed(1)}</span>
+              </div>
+              <p className="text-sm text-gray-500 line-clamp-3">
+                {product.description}
+              </p>
             </div>
-            <h3 className="text-lg font-semibold text-foreground line-clamp-1">{product.name}</h3>
-            <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{product.description}</p>
-            <div className="flex items-center justify-between mt-4">
-              <span className="text-2xl font-bold text-primary">£{product.price}</span>
-              <Button size="sm" onClick={() => addToCart(product)}>Add to Cart</Button>
+          </CardContent>
+          <CardFooter className="p-4 pt-0">
+            <div className="flex items-center justify-between w-full">
+              <span className="text-xl font-bold">£{product.price}</span>
+              <Button
+                className="bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                style={{ padding: "6px 12px", minWidth: "auto" }}  // Explicitly set the width
+                onClick={() => addToCart(product)}
+              >
+                Add to Cart
+              </Button>
             </div>
-          </div>
-        </div>
+          </CardFooter>
+        </Card>
       ))}
     </div>
   );

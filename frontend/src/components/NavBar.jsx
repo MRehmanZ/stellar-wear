@@ -49,12 +49,15 @@ const NavBar = () => {
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center space-x-6">
-          <Link to="/new-in" className="hover:text-gray-300">New In</Link>
+        <div className="hidden md:flex items-center space-x-6"> 
+        <Link to="/new-in" className="hover:text-gray-300">New In</Link>
           <Link to="/mens" className="hover:text-gray-300">Mens</Link>
           <Link to="/collections" className="hover:text-gray-300">Collections</Link>
+        </div>
+
+        <div className="hidden md:flex items-center space-x-6">
           <Link to="/wishlist" className="hover:text-gray-300 flex items-center">
-            <FaHeart className="mr-1" />
+            <FaHeart className="text-2xl mr-2"  />
             Wishlist
           </Link>
           <div className="relative">
@@ -62,7 +65,7 @@ const NavBar = () => {
               onClick={toggleDropdown}
               className="hover:text-gray-300 flex items-center focus:outline-none"
             >
-              <FaUserCircle className="mr-1" />
+              <FaUserCircle className="text-2xl mr-2"  />
               Account <FaChevronDown className="ml-1" />
             </button>
             {isDropdownOpen && (
@@ -105,10 +108,10 @@ const NavBar = () => {
             )}
           </div>
           <button onClick={toggleCart} className="relative hover:text-gray-300 flex items-center">
-            <FaShoppingCart className="mr-1" />
-            Cart
+            <FaShoppingCart className="text-2xl mr-2" />
+            
             {cartItemCount > 0 && (
-              <span className="absolute top-0 right-0 bg-red-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+              <span className="absolute top-4 right-0 bg-gray-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
                 {cartItemCount}
               </span>
             )}
@@ -127,9 +130,21 @@ const NavBar = () => {
               <li><Link to="/outfit-builder" onClick={toggleMenu} className="hover:text-gray-300">Outfit Builder</Link></li>
               <li><Link to="/outlet" onClick={toggleMenu} className="hover:text-gray-300">Outlet</Link></li>
               <li><Link to="/wishlist" onClick={toggleMenu} className="hover:text-gray-300">Wishlist</Link></li>
-              <li><button onClick={toggleCart} className="hover:text-gray-300 flex items-center">Cart</button></li>
-              <li>
-                <button
+            </ul>
+          </div>
+        )}
+
+        <div className='xlg:hidden md:hidden lg:hidden grid grid-cols-2 text-2xl mr-2 space-x-2'>
+        <button className="relative hover:text-gray-300 flex items-center">
+        <FaShoppingCart onClick={toggleCart} className="hover:text-gray-300 flex items-center"/>
+        {cartItemCount > 0 && (
+              <span className="absolute top-4 right-0 bg-gray-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+                {cartItemCount}
+              </span>)}
+        </button>
+        
+              
+                <FaUserCircle
                   onClick={() => {
                     isLoggedIn ? handleLogout() : navigate('/login');
                     toggleMenu();
@@ -137,11 +152,9 @@ const NavBar = () => {
                   className="hover:text-gray-300"
                 >
                   {isLoggedIn ? 'Logout' : 'Login'}
-                </button>
-              </li>
-            </ul>
-          </div>
-        )}
+                </FaUserCircle>
+              
+        </div>
       </nav>
 
       {/* Cart Panel */}

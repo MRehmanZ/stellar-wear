@@ -3,6 +3,7 @@ import { getProducts } from '../services/ProductService';
 import ProductsList from './FeaturedProducts';
 import Heroes from './Heroes';
 import FeaturedProducts from './FeaturedProducts';
+import InstagramFeed from './InstagramFeed';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -30,7 +31,7 @@ const Home = () => {
         linkUrl="/products"
       />
       <FeaturedProducts products={featuredProducts} />
-      
+      <InstagramFeed />
       {/* Add more components like banners, collections, etc. */}
     </div>
   );

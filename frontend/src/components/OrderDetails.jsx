@@ -17,12 +17,13 @@ const OrderDetails = () => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem('token')}`,
+            "UserId": localStorage.getItem('userId'),
           },
         });
-
+  
         if (response.ok) {
           const data = await response.json();
-          setOrder(data);
+          setOrder(data); // Set the order state with fetched data
         } else {
           setError("Failed to load order details");
         }
@@ -32,7 +33,7 @@ const OrderDetails = () => {
         setLoading(false);
       }
     };
-
+  
     fetchOrderDetails();
   }, [orderId]);
 
@@ -54,7 +55,7 @@ const OrderDetails = () => {
       <p>Order Number: {order.orderNumber}</p>
       <h2>Items</h2>
       <ul>
-        {order.orderItems.map((item) => (
+        {order.orderItems.$values.map((item) => (
           <li key={item.productId}>
             {item.productName} - {item.quantity} x £{item.price}
           </li>

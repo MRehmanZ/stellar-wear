@@ -1,4 +1,4 @@
-/* styles/heroes.css */
+
 .hero-container {
   position: relative;
   width: 100%;
@@ -106,4 +106,4 @@
     font-size: 0.75rem; /* Even smaller button for very small screens */
     padding: 6px 12px; /* Adjust padding for extra small screens */
   }
-}
+} 

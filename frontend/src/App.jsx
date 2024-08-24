@@ -16,9 +16,10 @@ import OrdersPage from "./components/OrdersPage";
 import OrderDetails from "./components/OrderDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./components/admin/AdminDashboard";
-import ProductsPage from "./components/admin/ProductsPage";
+import ManageProducts from "./components/admin/ManageProducts";
 import UsersPage from "./components/admin/UsersPage";
 import AdminDashboardLayout from "./components/admin/AdminDashboardLayout";
+import ProductsPage from "./components/ProductsPage";
 
 // Load Stripe with your publishable key
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -36,6 +37,7 @@ function App() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/cart" element={<Cart />} />
+          <Route path="products" element={<ProductsPage />} />
           {/* Wrap the Checkout component with Elements */}
           <Route 
             exact 
@@ -50,7 +52,7 @@ function App() {
           <Route exact path="/orders" element={<OrdersPage />} />
           <Route exact path="/order/:orderId" element={<OrderDetails />} />
           <Route path="/admin" element={<AdminDashboardLayout />}>
-            <Route path="products" element={<ProductsPage />} />
+            <Route path="products" element={<ManageProducts />} />
             <Route path="users" element={<UsersPage />} />
             <Route path="orders" element={<OrdersPage />} />
         </Route>

@@ -23,7 +23,51 @@ namespace Backend.Models
                 entity.ToTable("AspNetUsers");
             });
 
-            // Configure Product
+            // Configure Identity Role with GUID primary key
+            modelBuilder.Entity<IdentityRole<Guid>>(entity =>
+            {
+                entity.ToTable("AspNetRoles");
+                entity.HasKey(r => r.Id);
+                entity.Property(r => r.Name).IsRequired().HasMaxLength(256);
+                entity.Property(r => r.NormalizedName).HasMaxLength(256);
+            });
+
+            // Configure Identity User Role with GUID keys
+            modelBuilder.Entity<IdentityUserRole<Guid>>(entity =>
+            {
+                entity.ToTable("AspNetUserRoles");
+                entity.HasKey(ur => new { ur.UserId, ur.RoleId });
+            });
+
+            // Configure Identity User Claim with GUID primary key
+            modelBuilder.Entity<IdentityUserClaim<Guid>>(entity =>
+            {
+                entity.ToTable("AspNetUserClaims");
+                entity.HasKey(uc => uc.Id);
+            });
+
+            // Configure Identity Role Claim with GUID primary key
+            modelBuilder.Entity<IdentityRoleClaim<Guid>>(entity =>
+            {
+                entity.ToTable("AspNetRoleClaims");
+                entity.HasKey(rc => rc.Id);
+            });
+
+            // Configure Identity User Login with GUID keys
+            modelBuilder.Entity<IdentityUserLogin<Guid>>(entity =>
+            {
+                entity.ToTable("AspNetUserLogins");
+                entity.HasKey(ul => new { ul.LoginProvider, ul.ProviderKey });
+            });
+
+            // Configure Identity User Token with GUID keys
+            modelBuilder.Entity<IdentityUserToken<Guid>>(entity =>
+            {
+                entity.ToTable("AspNetUserTokens");
+                entity.HasKey(ut => new { ut.UserId, ut.LoginProvider, ut.Name });
+            });
+
+            // Configure Product entity
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("Products");
@@ -37,6 +81,7 @@ namespace Backend.Models
                 entity.Property(p => p.IsFeatured).HasDefaultValue(false);
             });
 
+            // Configure Order entity
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.ToTable("Orders");
@@ -52,11 +97,11 @@ namespace Backend.Models
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Configure OrderItem
+            // Configure OrderItem entity
             modelBuilder.Entity<OrderItem>(entity =>
             {
                 entity.ToTable("OrderItems");
-                entity.HasKey(oi => oi.Id); // Assuming the use of a primary key on Id
+                entity.HasKey(oi => oi.Id);
                 entity.Property(oi => oi.ProductName).IsRequired().HasMaxLength(200);
                 entity.Property(oi => oi.Price).HasColumnType("decimal(18,2)");
                 entity.Property(oi => oi.Quantity).IsRequired();
@@ -67,7 +112,7 @@ namespace Backend.Models
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(oi => oi.Product)
-                      .WithMany() // Assuming no navigation property back to OrderItem
+                      .WithMany() // No navigation property back to OrderItem
                       .HasForeignKey(oi => oi.ProductId)
                       .OnDelete(DeleteBehavior.Cascade);
             });

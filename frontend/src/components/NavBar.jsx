@@ -12,7 +12,9 @@ const NavBar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { cartItems } = useCart();
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, user } = useAuth();
+  
+  const isAdmin = user && user.role === "Admin";
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -79,13 +81,16 @@ const NavBar = () => {
                 </Link>
                 {isLoggedIn && (
                   <>
+                  {isAdmin &&
+                  
                     <Link
                       to="/admin"
                       onClick={toggleDropdown}
                       className="block px-4 py-2 hover:bg-gray-200"
                     >
                       Admin Dashboard
-                    </Link>
+                    </Link> }
+                    
                     <Link
                       to="/orders"
                       onClick={toggleDropdown}
@@ -142,8 +147,6 @@ const NavBar = () => {
                 {cartItemCount}
               </span>)}
         </button>
-        
-              
                 <FaUserCircle
                   onClick={() => {
                     isLoggedIn ? handleLogout() : navigate('/login');

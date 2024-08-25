@@ -1,6 +1,5 @@
 using Backend.Models;
 using Backend.Services;
-using Backend.Controllers;
 using Backend.Seeds;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -39,10 +38,13 @@ namespace Backend
             // Configure email settings from appsettings.json
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
+            builder.Services.AddHttpClient();
+
             // Add custom services (EmailService, AuthService)
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<PaymentService>();
             builder.Services.AddScoped<AuthService>();
+            builder.Services.AddScoped<InstagramService>();
 
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
@@ -125,6 +127,13 @@ namespace Backend
                 {
                     context.Database.Migrate();
                     ProductSeeder.SeedAsync(services).Wait(); // Run the product seeder
+                    CategorySeeder.SeedAsync(services).Wait();
+
+                    // Seed roles and admin user
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                    SeedRolesAsync(roleManager).Wait();
+                    SeedAdminUserAsync(userManager, roleManager).Wait();
                 }
                 catch (Exception ex)
                 {
@@ -134,6 +143,32 @@ namespace Backend
             }
 
             app.Run();  // Run the application
+        }
+
+        static async Task SeedRolesAsync(RoleManager<IdentityRole<Guid>> roleManager)
+        {
+            var roles = new List<string> { "Admin", "User" };
+
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+                }
+            }
+        }
+
+        static async Task SeedAdminUserAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager)
+        {
+            var adminEmail = "mrzulfiquar@gmail.com";
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+            if (adminUser == null)
+            {
+                adminUser = new ApplicationUser { UserName = "admin", Email = adminEmail };
+                await userManager.CreateAsync(adminUser, "@Hello1234");
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+        
         }
     }
 }

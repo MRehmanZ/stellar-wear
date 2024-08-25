@@ -8,6 +8,10 @@ namespace Backend.Models
     {
         public BackendDbContext(DbContextOptions<BackendDbContext> options) : base(options) { }
 
+        // Add the Categories DbSet
+        public DbSet<Category> Categories { get; set; }
+
+        // Existing DbSets
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
@@ -21,6 +25,14 @@ namespace Backend.Models
             modelBuilder.Entity<ApplicationUser>(entity =>
             {
                 entity.ToTable("AspNetUsers");
+            });
+
+            // Configure Category
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.ToTable("Categories");
+                entity.HasKey(c => c.Id);
+                entity.Property(c => c.Name).IsRequired().HasMaxLength(100);
             });
 
             // Configure Product

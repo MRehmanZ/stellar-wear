@@ -1,0 +1,41 @@
+.instagram-feed .instagram-post {
+    position: relative;
+    overflow: hidden;
+    padding-top: 120%; /* This creates a box with a 5:6 aspect ratio */
+    border-radius: 0.5rem; /* To match the rounded corners */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+  
+  .instagram-feed .instagram-post img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  
+  .instagram-feed .instagram-post:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .instagram-feed .instagram-post .caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    color: #fff;
+    font-size: 0.875rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  
+  .instagram-feed .instagram-post:hover .caption {
+    opacity: 1;
+  }
+  

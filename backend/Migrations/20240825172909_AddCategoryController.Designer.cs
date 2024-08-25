@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(BackendDbContext))]
-    [Migration("20240823174848_addPayment19")]
-    partial class addPayment19
+    [Migration("20240825172909_AddCategoryController")]
+    partial class AddCategoryController
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -129,6 +129,22 @@ namespace Backend.Migrations
                     b.HasIndex("CartId");
 
                     b.ToTable("CartItem");
+                });
+
+            modelBuilder.Entity("Backend.Models.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Models.Order", b =>
@@ -353,7 +369,12 @@ namespace Backend.Migrations
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("RoleId");
 
@@ -445,6 +466,10 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
+                    b.HasOne("Backend.Models.ApplicationUser", null)
+                        .WithMany("UserRoles")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
@@ -470,6 +495,8 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Orders");
+
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("Backend.Models.Cart", b =>

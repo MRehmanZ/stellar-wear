@@ -167,28 +167,29 @@ namespace Backend.Controllers
             return Ok(order);
         }
 
-
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrder(Guid id)
         {
-            var order = await _context.Orders.Include(o => o.OrderItems)
-                                             .FirstOrDefaultAsync(o => o.Id == id);
-
-            if (order == null)
+            try
             {
-                return NotFound("Order not found.");
-            }
+                var userId = Guid.Parse(Request.Headers["UserId"]);
+                var order = await _context.Orders.Include(o => o.OrderItems)
+                                                 .FirstOrDefaultAsync(o => o.Id == id);
 
-            // Ensure the user can only access their own orders
-            var userId = Guid.Parse(User.FindFirst("sub")?.Value);
-            if (order.UserId != userId)
+                if (order == null || order.UserId != userId)
+                {
+                    return Forbid("You are not authorized to view this order.");
+                }
+
+                return Ok(order);
+            }
+            catch (Exception ex)
             {
-                return Forbid("You are not authorized to view this order.");
+                //_logger.LogError(ex, "An error occurred while fetching the order.");
+                return StatusCode(500, "Internal server error.");
             }
-
-            return Ok(order);
         }
+
 
         [HttpGet("user-orders")]
         public async Task<IActionResult> GetUserOrders()
@@ -203,10 +204,11 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Order>> GetOrders()
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            return _context.Orders.ToList();
+            return await _context.Orders.Include(o => o.OrderItems).ToListAsync();
         }
+
     }
 
     public class ConfirmPaymentRequest

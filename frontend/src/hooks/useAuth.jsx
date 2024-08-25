@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, createContext } from 'react';
-import { loginUser, logout} from '../services/AuthService';
+import {jwtDecode} from 'jwt-decode';
+import { loginUser, logout } from '../services/AuthService';
 
-// Create a context for authentication
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
@@ -14,9 +14,15 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
-      // const user = await authService.getCurrentUser();
-      // Optionally, decode the token to extract user information
-      // setUser(jwt_decode(token));
+      const decodedToken = jwtDecode(token);
+
+      const user = {
+        id: decodedToken.sub,
+        name: decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+        role: decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+      };
+
+      setUser(user);
     } else {
       setIsLoggedIn(false);
       setUser(null);
@@ -27,8 +33,15 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await loginUser(userData);
       setIsLoggedIn(true);
-      // Optionally, decode the token to extract user information
-      // setUser(jwt_decode(data.token));
+      const decodedToken = jwtDecode(data.token);
+
+      const user = {
+        id: decodedToken.sub,
+        name: decodedToken["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+        role: decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+      };
+
+      setUser(user);
       return data;
     } catch (error) {
       throw error;

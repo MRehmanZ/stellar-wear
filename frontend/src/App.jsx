@@ -17,53 +17,64 @@ import OrderDetails from "./components/OrderDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import ManageProducts from "./components/admin/ManageProducts";
-import UsersPage from "./components/admin/UsersPage";
 import AdminDashboardLayout from "./components/admin/AdminDashboardLayout";
 import ProductsPage from "./components/ProductsPage";
 import Footer from "./components/Footer";
+import AdminRoute from "./components/AdminRoute";
+import UserManagement from "./components/admin/UserManagement";
+import AddProduct from "./components/admin/AddProduct";
 
-// Load Stripe with your publishable key
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function App() {
   return (
     <AuthProvider>
       <CartProvider>
-      <Router>
-      <NavBar />
-      <Toaster />
-      <div>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/register" element={<Register />} />
-          <Route exact path="/cart" element={<Cart />} />
-          <Route path="products" element={<ProductsPage />} />
-          {/* Wrap the Checkout component with Elements */}
-          <Route 
-            exact 
-            path="/checkout" 
-            element={
-               <Elements stripe={stripePromise}>
-                <ProtectedRoute element={<Checkout />} /> 
-              </Elements> 
-            } 
-          />
-          <Route exact path="/order-confirmation" element={<OrderConfirmation />} />
-          <Route exact path="/orders" element={<OrdersPage />} />
-          <Route exact path="/order/:orderId" element={<OrderDetails />} />
-          <Route path="/admin" element={<AdminDashboardLayout />}>
-            <Route path="products" element={<ManageProducts />} />
-            <Route path="users" element={<UsersPage />} />
-            <Route path="orders" element={<OrdersPage />} />
-        </Route>
-        </Routes>
-      </div>
-      <Footer />
-    </Router>
+        <Router>
+          <NavBar />
+          <Toaster />
+          <div>
+            <Routes>
+              <Route exact path="/" element={<Home />} />
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/register" element={<Register />} />
+              <Route exact path="/cart" element={<Cart />} />
+              <Route path="products" element={<ProductsPage />} />
+              <Route
+                exact
+                path="/checkout"
+                element={
+                  <Elements stripe={stripePromise}>
+                    <ProtectedRoute>
+                      <Checkout />
+                    </ProtectedRoute>
+                  </Elements>
+                }
+              />
+              <Route exact path="/order-confirmation" element={<OrderConfirmation />} />
+              <Route exact path="/orders" element={<OrdersPage />} />
+              <Route exact path="/order/:orderId" element={<OrderDetails />} />
+              
+              {/* Admin Routes */}
+              <Route 
+                path="/admin" 
+                element={
+                  <AdminRoute>
+                    <AdminDashboardLayout />
+                  </AdminRoute>
+                }
+              >
+                <Route path="products" element={<ManageProducts />} />
+                <Route path="products/new" element={<AddProduct />} />
+                <Route path="users" element={<UserManagement />} />
+                <Route path="orders" element={<OrdersPage />} />
+              </Route>
+            </Routes>
+          </div>
+          <Footer />
+        </Router>
       </CartProvider>
-      </AuthProvider>
-    
+    </AuthProvider>
   );
 }
 

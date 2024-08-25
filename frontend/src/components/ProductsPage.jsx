@@ -18,6 +18,7 @@ const ProductsPage = () => {
       try {
         const productsData = await getProducts();
         setProducts(productsData.$values);
+        console.log(products)
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {

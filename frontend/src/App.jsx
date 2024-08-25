@@ -23,6 +23,10 @@ import Footer from "./components/Footer";
 import AdminRoute from "./components/AdminRoute";
 import UserManagement from "./components/admin/UserManagement";
 import AddProduct from "./components/admin/AddProduct";
+import SuitsPage from "./components/SuitsPage";
+import TiesPage from "./components/TiesPage";
+import ShoesPage from "./components/ShoesPage";
+import AccessoriesPage from "./components/AccessoriesPage";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -39,6 +43,10 @@ function App() {
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/register" element={<Register />} />
               <Route exact path="/cart" element={<Cart />} />
+              <Route exact path="/suits" element={<SuitsPage />} />
+              <Route exact path="/ties" element={<TiesPage />} />
+              <Route exact path="/shoes" element={<ShoesPage />} />
+              <Route exact path="/accessories" element={<AccessoriesPage />} />
               <Route path="products" element={<ProductsPage />} />
               <Route
                 exact

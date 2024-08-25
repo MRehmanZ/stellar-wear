@@ -52,9 +52,10 @@ const NavBar = () => {
         </div>
 
         <div className="hidden md:flex items-center space-x-6"> 
-        <Link to="/new-in" className="hover:text-gray-300">New In</Link>
-          <Link to="/mens" className="hover:text-gray-300">Mens</Link>
-          <Link to="/collections" className="hover:text-gray-300">Collections</Link>
+          <Link to="/suits" className="hover:text-gray-300">Suits</Link>
+          <Link to="/ties" className="hover:text-gray-300">Ties</Link>
+          <Link to="/shoes" className="hover:text-gray-300">Shoes</Link>
+          <Link to="/accessories" className="hover:text-gray-300">Accessories</Link>
         </div>
 
         <div className="hidden md:flex items-center space-x-6">
@@ -81,16 +82,15 @@ const NavBar = () => {
                 </Link>
                 {isLoggedIn && (
                   <>
-                  {isAdmin &&
-                  
-                    <Link
-                      to="/admin"
-                      onClick={toggleDropdown}
-                      className="block px-4 py-2 hover:bg-gray-200"
-                    >
-                      Admin Dashboard
-                    </Link> }
-                    
+                    {isAdmin &&
+                      <Link
+                        to="/admin"
+                        onClick={toggleDropdown}
+                        className="block px-4 py-2 hover:bg-gray-200"
+                      >
+                        Admin Dashboard
+                      </Link> 
+                    }
                     <Link
                       to="/orders"
                       onClick={toggleDropdown}
@@ -114,7 +114,6 @@ const NavBar = () => {
           </div>
           <button onClick={toggleCart} className="relative hover:text-gray-300 flex items-center">
             <FaShoppingCart className="text-2xl mr-2" />
-            
             {cartItemCount > 0 && (
               <span className="absolute top-4 right-0 bg-gray-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
                 {cartItemCount}
@@ -129,32 +128,33 @@ const NavBar = () => {
               <FaTimes />
             </button>
             <ul className="space-y-6 text-2xl mt-10">
-              <li><Link to="/new-in" onClick={toggleMenu} className="hover:text-gray-300">New In</Link></li>
-              <li><Link to="/mens" onClick={toggleMenu} className="hover:text-gray-300">Mens</Link></li>
-              <li><Link to="/collections" onClick={toggleMenu} className="hover:text-gray-300">Collections</Link></li>
+              <li><Link to="/suits" onClick={toggleMenu} className="hover:text-gray-300">Suits</Link></li>
+              <li><Link to="/ties" onClick={toggleMenu} className="hover:text-gray-300">Ties</Link></li>
+              <li><Link to="/shoes" onClick={toggleMenu} className="hover:text-gray-300">Shoes</Link></li>
+              <li><Link to="/accessories" onClick={toggleMenu} className="hover:text-gray-300">Accessories</Link></li>
               <li><Link to="/wishlist" onClick={toggleMenu} className="hover:text-gray-300">Wishlist</Link></li>
             </ul>
           </div>
         )}
 
         <div className='xlg:hidden md:hidden lg:hidden grid grid-cols-2 text-2xl mr-2 space-x-2'>
-        <button className="relative hover:text-gray-300 flex items-center">
-        <FaShoppingCart onClick={toggleCart} className="hover:text-gray-300 flex items-center"/>
-        {cartItemCount > 0 && (
+          <button className="relative hover:text-gray-300 flex items-center">
+            <FaShoppingCart onClick={toggleCart} className="hover:text-gray-300 flex items-center"/>
+            {cartItemCount > 0 && (
               <span className="absolute top-4 right-0 bg-gray-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
                 {cartItemCount}
-              </span>)}
-        </button>
-                <FaUserCircle
-                  onClick={() => {
-                    isLoggedIn ? handleLogout() : navigate('/login');
-                    toggleMenu();
-                  }}
-                  className="hover:text-gray-300"
-                >
-                  {isLoggedIn ? 'Logout' : 'Login'}
-                </FaUserCircle>
-              
+              </span>
+            )}
+          </button>
+          <FaUserCircle
+            onClick={() => {
+              isLoggedIn ? handleLogout() : navigate('/login');
+              toggleMenu();
+            }}
+            className="hover:text-gray-300"
+          >
+            {isLoggedIn ? 'Logout' : 'Login'}
+          </FaUserCircle>
         </div>
       </nav>
 

@@ -27,6 +27,7 @@ import SuitsPage from "./components/SuitsPage";
 import TiesPage from "./components/TiesPage";
 import ShoesPage from "./components/ShoesPage";
 import AccessoriesPage from "./components/AccessoriesPage";
+import ManageCategories from "./components/admin/ManageCategories";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -76,6 +77,7 @@ function App() {
                 <Route path="products/new" element={<AddProduct />} />
                 <Route path="users" element={<UserManagement />} />
                 <Route path="orders" element={<OrdersPage />} />
+                <Route path="categories" element={<ManageCategories />} />
               </Route>
             </Routes>
           </div>

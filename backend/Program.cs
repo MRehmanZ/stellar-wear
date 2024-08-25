@@ -127,6 +127,7 @@ namespace Backend
                 {
                     context.Database.Migrate();
                     ProductSeeder.SeedAsync(services).Wait(); // Run the product seeder
+                    CategorySeeder.SeedAsync(services).Wait();
 
                     // Seed roles and admin user
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();

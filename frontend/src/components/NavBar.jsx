@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHeart, FaUserCircle, FaShoppingCart, FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { SiStylelint } from "react-icons/si";
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../hooks/useAuth';
 import CartPanel from './CartPanel';
+import { fetchCategories } from '../services/CategoryService';
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -15,6 +16,22 @@ const NavBar = () => {
   const { isLoggedIn, logout, user } = useAuth();
   
   const isAdmin = user && user.role === "Admin";
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await fetchCategories();
+        console.log(data)
+        setCategories(data.$values);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    loadCategories();
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -52,10 +69,9 @@ const NavBar = () => {
         </div>
 
         <div className="hidden md:flex items-center space-x-6"> 
-          <Link to="/suits" className="hover:text-gray-300">Suits</Link>
-          <Link to="/ties" className="hover:text-gray-300">Ties</Link>
-          <Link to="/shoes" className="hover:text-gray-300">Shoes</Link>
-          <Link to="/accessories" className="hover:text-gray-300">Accessories</Link>
+          {categories.map(category => (
+            <Link key={category.id} to={`/${category.name.toLowerCase()}`} className="hover:text-gray-300">{category.name}</Link>
+          ))}
         </div>
 
         <div className="hidden md:flex items-center space-x-6">
@@ -82,15 +98,16 @@ const NavBar = () => {
                 </Link>
                 {isLoggedIn && (
                   <>
-                    {isAdmin &&
-                      <Link
-                        to="/admin"
-                        onClick={toggleDropdown}
-                        className="block px-4 py-2 hover:bg-gray-200"
-                      >
-                        Admin Dashboard
-                      </Link> 
-                    }
+                  {isAdmin &&
+                  
+                    <Link
+                      to="/admin"
+                      onClick={toggleDropdown}
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
+                      Admin Dashboard
+                    </Link> }
+                    
                     <Link
                       to="/orders"
                       onClick={toggleDropdown}
@@ -114,6 +131,7 @@ const NavBar = () => {
           </div>
           <button onClick={toggleCart} className="relative hover:text-gray-300 flex items-center">
             <FaShoppingCart className="text-2xl mr-2" />
+            
             {cartItemCount > 0 && (
               <span className="absolute top-4 right-0 bg-gray-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
                 {cartItemCount}
@@ -128,34 +146,17 @@ const NavBar = () => {
               <FaTimes />
             </button>
             <ul className="space-y-6 text-2xl mt-10">
-              <li><Link to="/suits" onClick={toggleMenu} className="hover:text-gray-300">Suits</Link></li>
-              <li><Link to="/ties" onClick={toggleMenu} className="hover:text-gray-300">Ties</Link></li>
-              <li><Link to="/shoes" onClick={toggleMenu} className="hover:text-gray-300">Shoes</Link></li>
-              <li><Link to="/accessories" onClick={toggleMenu} className="hover:text-gray-300">Accessories</Link></li>
+              {categories.map(category => (
+                <li key={category.id}>
+                  <Link to={`/${category.name.toLowerCase()}`} onClick={toggleMenu} className="hover:text-gray-300">
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
               <li><Link to="/wishlist" onClick={toggleMenu} className="hover:text-gray-300">Wishlist</Link></li>
             </ul>
           </div>
         )}
-
-        <div className='xlg:hidden md:hidden lg:hidden grid grid-cols-2 text-2xl mr-2 space-x-2'>
-          <button className="relative hover:text-gray-300 flex items-center">
-            <FaShoppingCart onClick={toggleCart} className="hover:text-gray-300 flex items-center"/>
-            {cartItemCount > 0 && (
-              <span className="absolute top-4 right-0 bg-gray-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                {cartItemCount}
-              </span>
-            )}
-          </button>
-          <FaUserCircle
-            onClick={() => {
-              isLoggedIn ? handleLogout() : navigate('/login');
-              toggleMenu();
-            }}
-            className="hover:text-gray-300"
-          >
-            {isLoggedIn ? 'Logout' : 'Login'}
-          </FaUserCircle>
-        </div>
       </nav>
 
       {/* Cart Panel */}

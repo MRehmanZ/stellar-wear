@@ -132,8 +132,6 @@ const NavBar = () => {
               <li><Link to="/new-in" onClick={toggleMenu} className="hover:text-gray-300">New In</Link></li>
               <li><Link to="/mens" onClick={toggleMenu} className="hover:text-gray-300">Mens</Link></li>
               <li><Link to="/collections" onClick={toggleMenu} className="hover:text-gray-300">Collections</Link></li>
-              <li><Link to="/outfit-builder" onClick={toggleMenu} className="hover:text-gray-300">Outfit Builder</Link></li>
-              <li><Link to="/outlet" onClick={toggleMenu} className="hover:text-gray-300">Outlet</Link></li>
               <li><Link to="/wishlist" onClick={toggleMenu} className="hover:text-gray-300">Wishlist</Link></li>
             </ul>
           </div>

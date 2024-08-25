@@ -3,13 +3,19 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useCart } from '../context/CartContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CartPanel = ({ isOpen, onClose }) => {
   const { cartItems, removeFromCart, updateCartItemQuantity } = useCart();
-  
+  const navigate = useNavigate();
+
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
+  const handleCheckout = () => {
+    onClose(); // Close the CartPanel
+    navigate('/checkout'); // Navigate to the checkout page
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -64,9 +70,9 @@ const CartPanel = ({ isOpen, onClose }) => {
               <span className="font-semibold">Total:</span>
               <span className="font-semibold">£{totalPrice.toFixed(2)}</span>
             </div>
-            <Link to="/checkout" className="w-full">
-              <Button className="w-full">Checkout</Button>
-            </Link>
+            <Button className="w-full" onClick={handleCheckout}>
+              Checkout
+            </Button>
           </div>
         </div>
       </SheetContent>

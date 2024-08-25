@@ -13,6 +13,7 @@ const AdminDashboardLayout = () => {
           <SidebarItem to="/admin/products">Products</SidebarItem>
           <SidebarItem to="/admin/users">Users</SidebarItem>
           <SidebarItem to="/admin/orders">Orders</SidebarItem>
+          <SidebarItem to="/admin/categories">Categories</SidebarItem>
         </SidebarSection>
         <SidebarSection title="Settings">
           <SidebarItem to="/admin/settings">Settings</SidebarItem>

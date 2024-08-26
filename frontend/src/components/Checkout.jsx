@@ -56,7 +56,7 @@ const Checkout = () => {
     setIsLoading(true);
   
     try {
-      const orderResponse = await fetch("https://localhost:7233/api/order/create-order", {
+      const orderResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/order/create-order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +84,7 @@ const Checkout = () => {
       const orderId = orderData.orderId;
   
       // Step 2: Create the payment intent
-      const paymentIntentResponse = await fetch("https://localhost:7233/api/order/create-payment-intent", {
+      const paymentIntentResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/order/create-payment-intent`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,7 +111,7 @@ const Checkout = () => {
         setIsLoading(false);
       } else if (result.paymentIntent.status === "succeeded") {
         // Step 4: Confirm payment and finalize the order
-        const confirmResponse = await fetch("https://localhost:7233/api/order/confirm-payment", {
+        const confirmResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/order/confirm-payment`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -157,7 +157,7 @@ const Checkout = () => {
                   <div key={item.id} className="flex items-center space-x-4 py-2">
                     <div className="relative h-20 w-20 overflow-hidden rounded-md">
                       <img
-                        src={`https://localhost:7233/${item.imageUrl}`} 
+                        src={`${import.meta.env.VITE_API_BASE_URL}/${item.imageUrl}`} 
                         alt={item.name}
                         className="w-full h-full object-cover"
                       />

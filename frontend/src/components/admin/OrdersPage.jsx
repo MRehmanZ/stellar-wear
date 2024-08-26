@@ -10,7 +10,7 @@ const OrdersPage = () => {
 
   useEffect(() => {
     // Fetch orders from the backend
-    fetch("https://localhost:7233/api/order")
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/order`)
       .then((res) => res.json())
       .then((data) => setOrders(data.$values));
       console.log(orders)

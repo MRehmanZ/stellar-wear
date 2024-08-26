@@ -12,7 +12,7 @@ const OrderDetails = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        const response = await fetch(`https://localhost:7233/api/order/${orderId}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/order/${orderId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

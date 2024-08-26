@@ -65,7 +65,7 @@ const OrderConfirmation = () => {
                         <div className="flex items-center space-x-4">
                         <div className="relative w-24 h-24 bg-zinc-100 rounded-md overflow-hidden">
                           <img
-                            src={`https://localhost:7233/${orderItem.imageUrl}`} 
+                            src={`${import.meta.env.VITE_API_BASE_URL}/${orderItem.imageUrl}`} 
                             alt="Minimalist T-Shirt"
                             layout="fill"
                             objectFit="cover"

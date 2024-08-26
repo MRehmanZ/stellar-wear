@@ -1,7 +1,7 @@
 // services/OrderService.js
 import axios from 'axios';
 
-const API_URL = 'https://localhost:7233/api/order';
+const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/order`;
 
 export const getOrders = async () => {
   const token = localStorage.getItem('token');

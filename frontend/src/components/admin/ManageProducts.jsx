@@ -18,7 +18,7 @@ const ManageProducts = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("https://localhost:7233/api/products")
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products`)
       .then((res) => res.json())
       .then((data) => setProducts(data.$values))
       .catch((error) => console.error("Error fetching products:", error));
@@ -31,7 +31,7 @@ const ManageProducts = () => {
 
   const handleSave = async () => {
     // Implement save functionality
-    const response = await fetch(`https://localhost:7233/api/products/${selectedProduct.id}`, {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/products/${selectedProduct.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +49,7 @@ const ManageProducts = () => {
   };
 
   const handleDelete = (id) => {
-    fetch(`https://localhost:7233/api/product/${id}`, {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/product/${id}`, {
       method: "DELETE",
     }).then(() => {
       setProducts(products.filter((product) => product.id !== id));

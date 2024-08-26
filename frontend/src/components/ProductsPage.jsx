@@ -134,7 +134,7 @@ const ProductsPage = () => {
               className="group relative rounded-lg overflow-hidden shadow-lg transition-all hover:shadow-xl bg-white"
             >
               <img
-                src={`https://localhost:7233/${product.imageUrl}`}
+                src={`${import.meta.env.VITE_API_BASE_URL}/${product.imageUrl}`}
                 alt={product.name}
                 className="w-full h-64 object-cover group-hover:opacity-80 transition-opacity"
               />

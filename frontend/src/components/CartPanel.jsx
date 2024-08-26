@@ -30,7 +30,7 @@ const CartPanel = ({ isOpen, onClose }) => {
                 <div key={item.id} className="flex items-center space-x-4 py-4 border-b">
                   <div className="relative w-20 h-20 rounded-md overflow-hidden">
                     <img
-                      src={`https://localhost:7233/${item.imageUrl}`} 
+                      src={`${import.meta.env.VITE_API_BASE_URL}/${item.imageUrl}`} 
                       alt={item.name}
                       className="w-full h-full object-cover"
                     />

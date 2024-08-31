@@ -23,7 +23,6 @@ const NavBar = () => {
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
-        console.log(data)
         setCategories(data.$values);
       } catch (error) {
         console.error("Error fetching categories:", error);

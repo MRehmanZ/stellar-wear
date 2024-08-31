@@ -1,24 +1,38 @@
-import { Check, Printer, ChevronRight, ShoppingBag, Truck, CreditCard } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { Link, useLocation, useNavigation } from "react-router-dom";
-import react, { useState, useEffect } from "react";
+import { Check, Printer, ChevronRight, ShoppingBag, Truck, CreditCard } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { getCurrentOrderAddress } from "../services/OrderService";
 
 const OrderConfirmation = () => {
   const location = useLocation();
-  // const navigate = useNavigation();
+  const navigate = useNavigate();
   const [order, setOrder] = useState(null);
+  const [address, setAddress] = useState(null);
 
   useEffect(() => {
-    const state = location.state;
-    if (state && state.order) {
-      setOrder(state.order);
-      console.log(order)
-    } else {
-      // navigate("/"); // Redirect to home if no order data
-    }
-  }, [location.state]);
+    const fetchOrderAndAddress = async () => {
+      const state = location.state;
+      if (state && state.order) {
+        setOrder(state.order);
+        if (state.order.addressId) {
+          try {
+            const currentAddress = await getCurrentOrderAddress(state.order.addressId);
+            setAddress(currentAddress);
+            console.log("Fetched Address: ", currentAddress);
+          } catch (error) {
+            console.error("Error fetching address:", error);
+          }
+        }
+      } else {
+        navigate("/"); // Redirect to home if no order data
+      }
+    };
+
+    fetchOrderAndAddress();
+  }, [location.state, navigate]);
 
   if (!order) {
     return (
@@ -62,25 +76,21 @@ const OrderConfirmation = () => {
                     <h3 className="font-semibold text-xl mb-4">Order Summary</h3>
                     <div className="space-y-4">
                       {order.orderItems.$values.map((orderItem) => (
-                        <div className="flex items-center space-x-4">
-                        <div className="relative w-24 h-24 bg-zinc-100 rounded-md overflow-hidden">
-                          <img
-                            src={`${import.meta.env.VITE_API_BASE_URL}/${orderItem.imageUrl}`} 
-                            alt="Minimalist T-Shirt"
-                            layout="fill"
-                            objectFit="cover"
-                          />
+                        <div className="flex items-center space-x-4" key={orderItem.id}>
+                          <div className="relative w-24 h-24 bg-zinc-100 rounded-md overflow-hidden">
+                            <img
+                              src={`${import.meta.env.VITE_API_BASE_URL}/${orderItem.imageUrl}`} 
+                              alt={orderItem.productName}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-medium text-lg">{orderItem.productName}</h4>
+                            <p className="font-medium">£{orderItem.price} x {orderItem.quantity}</p>
+                          </div>
+                          <p className="font-medium text-lg">£{(orderItem.price * orderItem.quantity).toFixed(2)}</p>
                         </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-lg">{orderItem.name}</h4>
-                          <p className="text-muted-foreground">{orderItem.category}</p>
-                          <p className="font-medium">£{orderItem.price} x {orderItem.quantity}</p>
-                        </div>
-                        <p className="font-medium text-lg">£{orderItem.price*orderItem.quantity}</p>
-                      </div>
                       ))}
-                      
-                     
                     </div>
                   </div>
                   <Separator />
@@ -95,12 +105,12 @@ const OrderConfirmation = () => {
                     </div>
                     <div className="flex justify-between text-lg">
                       <span>VAT</span>
-                      <span>£{(order.totalAmount*0.2).toFixed(2)}</span>
+                      <span>£{(order.totalAmount * 0.2).toFixed(2)}</span>
                     </div>
                     <Separator />
                     <div className="flex justify-between font-semibold text-xl">
                       <span>Total</span>
-                      <span>£{(order.totalAmount+9.99+(order.totalAmount*0.2)).toFixed(2)}</span>
+                      <span>£{(order.totalAmount + 9.99 + order.totalAmount * 0.2).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
@@ -115,10 +125,9 @@ const OrderConfirmation = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-medium text-lg">John Doe</p>
-                  <p>123 Fashion Avenue</p>
-                  <p>New York, NY 10001</p>
-                  <p>United States</p>
+                  <p className="font-medium text-lg">{address?.street}</p>
+                  <p>{address?.city}, {address?.state} {address?.postalCode}</p>
+                  <p>{address?.country}</p>
                 </CardContent>
               </Card>
               <Card className="border-none shadow-lg">
@@ -190,7 +199,7 @@ const OrderConfirmation = () => {
                 </p>
               </CardContent>
               <CardFooter>
-                <Link variant="secondary" className="w-full text-purple-600 text-lg">
+                <Link to="/shop" className="w-full text-purple-600 text-lg">
                   Shop Now
                 </Link>
               </CardFooter>
@@ -199,7 +208,7 @@ const OrderConfirmation = () => {
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export default OrderConfirmation;

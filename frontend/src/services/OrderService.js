@@ -12,3 +12,18 @@ export const getOrders = async () => {
   });
   return response.data;
 };
+
+const ADDRESS_API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/address`;
+
+export const getCurrentOrderAddress = async (id) => {
+  const response = await axios.get(`${ADDRESS_API_URL}/${id}`, 
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+
+  return response.data;
+};
+

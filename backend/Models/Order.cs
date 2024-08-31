@@ -14,6 +14,8 @@ namespace Backend.Models
         public string Status { get; set; }
         public decimal TotalAmount { get; set; }
         public DateTime CreatedAt { get; set; }
+        public Guid AddressId { get; set; }
+        public Address Address { get; set; }
 
         public ApplicationUser User { get; set; }
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();  // Ensure this is initialized

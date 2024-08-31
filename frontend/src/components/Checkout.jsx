@@ -18,11 +18,20 @@ const Checkout = () => {
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user, setUser } = useAuth();
   
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
-  
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [newAddress, setNewAddress] = useState({
+    street: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    country: '',
+  });
+
   const shippingCost = 9.99;
 
   useEffect(() => {
@@ -51,6 +60,43 @@ const Checkout = () => {
     }
   };
 
+  const handleAddAddress = async () => {
+    setIsLoading(true);
+
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/address`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem('token')}`,  // Include the token in the header
+            },
+            body: JSON.stringify({...newAddress, UserId: localStorage.getItem("userId")}),  // Send the address details
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error details:", errorData);
+            throw new Error("Failed to add address.");
+        }
+
+        const addressData = await response.json();
+        console.log(addressData.id)
+        setSelectedAddress(addressData.id);
+        setIsAddingAddress(false);
+
+        setUser(prevUser => ({
+          ...prevUser,
+          addresses: [...(prevUser?.addresses || []), addressData],
+        }));
+    } catch (error) {
+        console.error("Error adding address:", error);
+        setErrorMessage(error.message || "Failed to add address.");
+    } finally {
+        setIsLoading(false);
+    }
+};
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -63,19 +109,25 @@ const Checkout = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({
-          UserId: localStorage.getItem('userId'), // Assuming userId is stored in localStorage
+          UserId: localStorage.getItem('userId'),
           PaymentIntentId: "pending",
+          AddressId: selectedAddress,
           Items: cartItems.map(item => ({
             ProductId: item.id,
             ProductName: item.name,
             Quantity: item.quantity,
             Price: item.price,
+            ImageUrl: item.imageUrl
           })),
           TotalAmount: subtotal + shippingCost,
         }),
       });
-  
+
+      // console.log(await orderResponse.json())
+
       const orderData = await orderResponse.json();
+
+      
   
       if (!orderResponse.ok) {
         throw new Error("Failed to create order");
@@ -83,7 +135,6 @@ const Checkout = () => {
   
       const orderId = orderData.orderId;
   
-      // Step 2: Create the payment intent
       const paymentIntentResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/order/create-payment-intent`, {
         method: "POST",
         headers: {
@@ -99,18 +150,17 @@ const Checkout = () => {
         throw new Error("Client secret not returned by backend.");
       }
   
-      // Step 3: Confirm the payment
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
         },
       });
   
+     console.log(cartItems)
       if (result.error) {
         setErrorMessage(result.error.message);
         setIsLoading(false);
       } else if (result.paymentIntent.status === "succeeded") {
-        // Step 4: Confirm payment and finalize the order
         const confirmResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/order/confirm-payment`, {
           method: "POST",
           headers: {
@@ -125,11 +175,13 @@ const Checkout = () => {
               ProductName: item.name,
               Quantity: item.quantity,
               Price: item.price,
+              ImageUrl: item.imageUrl
             })),
           }),
         });
   
         const order = await confirmResponse.json();
+        console.log("Order: " + order)
   
         clearCart();
         navigate("/order-confirmation", { state: { order } });
@@ -151,6 +203,46 @@ const Checkout = () => {
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-6">
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold">Delivery Address</h3>
+                {user.addresses && user.addresses.length > 0 && !isAddingAddress ? (
+                  <Select value={selectedAddress} onValueChange={setSelectedAddress}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select an address" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {user.addresses.map((address) => (
+                        <SelectItem key={address.id} value={address.id}>
+                          {address.street}, {address.city}, {address.state}, {address.postalCode}, {address.country}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <div className="grid gap-4">
+                    <Label htmlFor="street">Street</Label>
+                    <Input id="street" value={newAddress.street} onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })} required />
+                    <Label htmlFor="city">City</Label>
+                    <Input id="city" value={newAddress.city} onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })} required />
+                    <Label htmlFor="state">State</Label>
+                    <Input id="state" value={newAddress.state} onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })} required />
+                    <Label htmlFor="postalCode">Postal Code</Label>
+                    <Input id="postalCode" value={newAddress.postalCode} onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })} required />
+                    <Label htmlFor="country">Country</Label>
+                    <Input id="country" value={newAddress.country} onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })} required />
+                    <Button onClick={handleAddAddress} disabled={isLoading}>Add Address</Button>
+                  </div>
+                )}
+                {!isAddingAddress && user.addresses && user.addresses.length > 0 && (
+                  <Button onClick={() => setIsAddingAddress(true)} disabled={isLoading}>
+                    Add New Address
+                  </Button>
+                )}
+                {user.addresses && user.addresses.length === 0 && (
+                  <p>No address found. Please add an address.</p>
+                )}
+              </div>
+              <Separator />
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold">Your Cart</h3>
                 {cartItems.map((item) => (

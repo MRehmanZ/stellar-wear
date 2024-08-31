@@ -16,6 +16,7 @@ namespace Backend.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Cart> Carts { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,6 +34,19 @@ namespace Backend.Models
                 entity.ToTable("Categories");
                 entity.HasKey(c => c.Id);
                 entity.Property(c => c.Name).IsRequired().HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Address>(entity =>
+            {
+                entity.ToTable("Addresses");
+                entity.HasKey(a => a.Id);
+                entity.Property(a => a.Street).IsRequired().HasMaxLength(200);
+                entity.Property(a => a.City).IsRequired().HasMaxLength(100);
+                entity.Property(a => a.State).IsRequired().HasMaxLength(100);
+                entity.Property(a => a.PostalCode).IsRequired().HasMaxLength(20);
+                entity.Property(a => a.Country).IsRequired().HasMaxLength(100);
+
+
             });
 
             // Configure Product
@@ -62,6 +76,11 @@ namespace Backend.Models
                       .WithMany(u => u.Orders)
                       .HasForeignKey(o => o.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(o => o.Address)
+                      .WithMany() 
+                      .HasForeignKey(o => o.AddressId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
             // Configure OrderItem

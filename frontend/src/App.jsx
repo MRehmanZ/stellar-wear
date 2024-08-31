@@ -54,9 +54,9 @@ function App() {
                 path="/checkout"
                 element={
                   <Elements stripe={stripePromise}>
-                    <ProtectedRoute>
+                    
                       <Checkout />
-                    </ProtectedRoute>
+                    
                   </Elements>
                 }
               />

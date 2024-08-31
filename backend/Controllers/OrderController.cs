@@ -36,38 +36,45 @@ namespace Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Find the user
-            var user = await _context.Users.FindAsync(model.UserId);
-            if (user == null)
+            try
             {
-                return BadRequest("User not found.");
-            }
+                var address = await _context.Addresses.FindAsync(model.AddressId);
+                if (address == null || address.UserId != model.UserId)
+                {
+                    return BadRequest("Invalid address.");
+                }
 
-            // Create the Order
-            var order = new Order
-            {
-                Id = Guid.NewGuid(),
-                OrderNumber = Guid.NewGuid().ToString().Substring(0, 8).ToUpper(),
-                UserId = model.UserId,
-                User = user,
-                PaymentIntentId = model.PaymentIntentId,
-                Status = "Pending",
-                TotalAmount = model.Items.Sum(i => i.Price * i.Quantity),
-                CreatedAt = DateTime.UtcNow,
-                OrderItems = model.Items.Select(i => new OrderItem
+                var order = new Order
                 {
                     Id = Guid.NewGuid(),
-                    ProductId = i.ProductId,
-                    ProductName = i.ProductName,
-                    Price = i.Price,
-                    Quantity = i.Quantity,
-                }).ToList()
-            };
+                    OrderNumber = Guid.NewGuid().ToString().Substring(0, 8).ToUpper(),
+                    UserId = model.UserId,
+                    PaymentIntentId = model.PaymentIntentId,
+                    Status = "Pending",
+                    TotalAmount = model.TotalAmount,
+                    CreatedAt = DateTime.UtcNow,
+                    Address = address,
+                    OrderItems = model.Items.Select(i => new OrderItem
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = i.ProductId,
+                        ProductName = i.ProductName,
+                        Price = i.Price,
+                        Quantity = i.Quantity,
+                        ImageUrl = i.ImageUrl,
+                        
+                    }).ToList()
+                };
 
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
 
-            return Ok(new { OrderId = order.Id });
+                return Ok(new { OrderId = order.Id });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while creating the order.");
+            }
         }
 
 
@@ -90,7 +97,6 @@ namespace Backend.Controllers
                 }
 
                 var totalAmount = (long)(order.TotalAmount * 100); // Convert to cents
-                //totalAmount = 10000;
 
                 if (totalAmount < 50) // Example: minimum charge of £0.50 in GBP (50 pence)
                 {
@@ -153,7 +159,8 @@ namespace Backend.Controllers
                     ProductName = item.ProductName,
                     Price = item.Price,
                     Quantity = item.Quantity,
-                    OrderId = order.Id // Set the order ID
+                    OrderId = order.Id,
+                    ImageUrl = item.ImageUrl,
                 };
 
                 _context.OrderItems.Add(orderItem);
@@ -172,23 +179,26 @@ namespace Backend.Controllers
         {
             try
             {
-                var userId = Guid.Parse(Request.Headers["UserId"]);
-                var order = await _context.Orders.Include(o => o.OrderItems)
-                                                 .FirstOrDefaultAsync(o => o.Id == id);
+                var userId = Guid.Parse(User.FindFirst("sub")?.Value);
+                var order = await _context.Orders
+                                          .Include(o => o.OrderItems)
+                                          .Include(o => o.Address) // Include the address
+                                          .FirstOrDefaultAsync(o => o.Id == id && o.UserId == userId);
 
-                if (order == null || order.UserId != userId)
+                if (order == null)
                 {
-                    return Forbid("You are not authorized to view this order.");
+                    return NotFound("Order not found.");
                 }
 
                 return Ok(order);
             }
             catch (Exception ex)
             {
-                //_logger.LogError(ex, "An error occurred while fetching the order.");
-                return StatusCode(500, "Internal server error.");
+                // Log the error and return a proper message
+                return StatusCode(500, "An error occurred while fetching the order.");
             }
         }
+
 
 
         [HttpGet("user-orders")]

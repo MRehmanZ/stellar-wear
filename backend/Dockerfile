@@ -6,7 +6,7 @@ EXPOSE 80
 # Use the SDK image to build and publish the app
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Backend.csproj", "./"]
+COPY ["Backend.csproj.user", "./"]
 RUN dotnet restore "./Backend.csproj.user"
 COPY . .
 WORKDIR "/src/."

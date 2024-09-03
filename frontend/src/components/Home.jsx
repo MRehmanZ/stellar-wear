@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getProducts } from '../services/ProductService';
-import ProductsList from './FeaturedProducts';
-import Heroes from './Heroes';
 import FeaturedProducts from './FeaturedProducts';
+import Heroes from './Heroes';
 import InstagramFeed from './InstagramFeed';
 
 const Home = () => {
@@ -23,16 +22,15 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <div className="home-container">
       <Heroes
-        title="Collection"
-        subtitle="Explore the latest trends"
+        title="Unleash Your Style"
+        subtitle="Discover the latest in fashion trends"
         imageUrl="/Hero.jpg"
         linkUrl="/products"
       />
       <FeaturedProducts products={featuredProducts} />
       <InstagramFeed />
-      {/* Add more components like banners, collections, etc. */}
     </div>
   );
 };

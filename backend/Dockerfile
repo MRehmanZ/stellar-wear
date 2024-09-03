@@ -7,13 +7,13 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Backend.csproj", "./"]
-RUN dotnet restore "./Backend.csproj"
+RUN dotnet restore "./Backend.csproj.user"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "Backend.csproj" -c Release -o /app/build
+RUN dotnet build "Backend.csproj.user" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Backend.csproj" -c Release -o /app/publish
+RUN dotnet publish "Backend.csproj.user" -c Release -o /app/publish
 
 # Use the base image to run the app
 FROM base AS final

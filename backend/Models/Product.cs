@@ -17,13 +17,13 @@ namespace Backend.Models
         [Required]
         public decimal Price { get; set; }
 
-        public List<string> Sizes { get; set; } = new List<string>(); // Initialize the list
+        public List<string> Sizes { get; set; } = new List<string>(); 
         public List<string> Colors { get; set; } = new List<string>();
 
         [Required]
-        public string Category { get; set; }  // Add Category
+        public string Category { get; set; }  
 
-        public int Rating { get; set; }  // Add Rating
+        public int Rating { get; set; }  
 
         [Required]
         public string ImageUrl { get; set; }

@@ -8,10 +8,8 @@ namespace Backend.Models
     {
         public BackendDbContext(DbContextOptions<BackendDbContext> options) : base(options) { }
 
-        // Add the Categories DbSet
         public DbSet<Category> Categories { get; set; }
 
-        // Existing DbSets
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
@@ -23,13 +21,11 @@ namespace Backend.Models
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure ApplicationUser
             modelBuilder.Entity<ApplicationUser>(entity =>
             {
                 entity.ToTable("AspNetUsers");
             });
 
-            // Configure Category
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.ToTable("Categories");
@@ -50,7 +46,6 @@ namespace Backend.Models
 
             });
 
-            // Configure Product
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("Products");
@@ -76,10 +71,6 @@ namespace Backend.Models
                 entity.Property(r => r.UserName).IsRequired().HasMaxLength(100);
                 entity.Property(r => r.Comment).IsRequired().HasMaxLength(1000);
                 entity.Property(r => r.Rating).IsRequired();
-                entity.HasOne(r => r.Product)
-                    .WithMany(p => p.Reviews)
-                    .HasForeignKey(r => r.ProductId)
-                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -102,11 +93,11 @@ namespace Backend.Models
                       .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // Configure OrderItem
+
             modelBuilder.Entity<OrderItem>(entity =>
             {
                 entity.ToTable("OrderItems");
-                entity.HasKey(oi => oi.Id); // Assuming the use of a primary key on Id
+                entity.HasKey(oi => oi.Id); 
                 entity.Property(oi => oi.ProductName).IsRequired().HasMaxLength(200);
                 entity.Property(oi => oi.Price).HasColumnType("decimal(18,2)");
                 entity.Property(oi => oi.Quantity).IsRequired();
@@ -117,7 +108,7 @@ namespace Backend.Models
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(oi => oi.Product)
-                      .WithMany() // Assuming no navigation property back to OrderItem
+                      .WithMany() 
                       .HasForeignKey(oi => oi.ProductId)
                       .OnDelete(DeleteBehavior.Cascade);
             });

@@ -26,7 +26,7 @@ namespace Backend.Controllers
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null) return NotFound();
-            return user;
+            return Ok(user);
         }
 
         [HttpPost]

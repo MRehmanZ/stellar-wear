@@ -1,5 +1,4 @@
-﻿// Models/Review.cs
-using System;
+﻿using System;
 
 namespace Backend.Models
 {
@@ -11,7 +10,5 @@ namespace Backend.Models
         public int Rating { get; set; } // Rating out of 5
         public string Comment { get; set; }
         public DateTime CreatedAt { get; set; }
-
-        public Product Product { get; set; }
     }
 }

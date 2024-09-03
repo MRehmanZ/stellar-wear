@@ -80,3 +80,13 @@ export const getProtectedData = async () => {
 export const isLoggedIn = () => {
   return !!localStorage.getItem('token');
 };
+
+export const fetchUser = async (id) => {
+  const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/${id}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+  return response.data;
+};
+

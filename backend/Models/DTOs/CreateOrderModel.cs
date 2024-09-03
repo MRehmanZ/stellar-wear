@@ -2,9 +2,9 @@
 {
     public class CreateOrderModel
     {
-        public Guid UserId { get; set; } // Required
-        public string PaymentIntentId { get; set; } // Required
-        public Guid AddressId { get; set; } // Required
+        public Guid UserId { get; set; } 
+        public string PaymentIntentId { get; set; } 
+        public Guid AddressId { get; set; } 
 
         public decimal TotalAmount { get; set; }
 

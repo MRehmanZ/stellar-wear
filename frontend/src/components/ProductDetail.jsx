@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import axios from 'axios';
+import { fetchUser } from '../services/AuthService';
+import { toast } from "sonner";
 
 const ProductDetail = () => {
   const { id } = useParams(); // Get product ID from URL
@@ -24,15 +26,11 @@ const ProductDetail = () => {
     // Fetch product data from backend
     const fetchProduct = async () => {
       try {
-        console.log(id)
         const product = await getProduct(id);
         setProduct(product);
         setSelectedSize(product.sizes.$values[0]);
         setSelectedColor(product.colors.$values[0]);
         setReviews(product.reviews.$values);
-
-        console.log(product.colors.$values)
-        console.log(product.sizes.$values)
       } catch (error) {
         console.error('Error fetching product data:', error);
       }
@@ -57,16 +55,38 @@ const ProductDetail = () => {
 
   const handleSubmitReview = async () => {
     try {
-      const newReview = {
-        productId: product.id,
-        rating,
-        comment: reviewText,
-      };
-      const response = await axios.post('/api/reviews', newReview);
-      setReviews([...reviews, response.data]);
-      setReviewText('');
-      setRating(0);
+      const user = await fetchUser(localStorage.getItem("userId"));
+
+      if (user) {
+        console.log(`user: ${JSON.stringify(user.userName)}`);
+
+        const newReview = {
+          ProductId: product.id,
+          rating,
+          comment: reviewText,
+          UserName: user.userName || user.UserName,
+        };
+
+        const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/review`,
+        newReview,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+  
+        console.log(response.data)
+        setReviews([...reviews, response.data]);
+        setReviewText('');
+        setRating(0);
+      } else {
+        toast.warning("Please login to submit a review.")
+      }
     } catch (error) {
+      toast.error("Error submitting review. Please try again.")
       console.error('Error submitting review:', error);
     }
   };

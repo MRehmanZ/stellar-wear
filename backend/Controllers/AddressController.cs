@@ -53,9 +53,6 @@ namespace Backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            //var userId = Guid.Parse(User.FindFirst("sub")?.Value);
-            //address.UserId = userId;
-
             _context.Addresses.Add(address);
             await _context.SaveChangesAsync();
 

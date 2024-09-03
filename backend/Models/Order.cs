@@ -1,5 +1,4 @@
-﻿// Models/Order.cs
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -18,7 +17,7 @@ namespace Backend.Models
         public Address Address { get; set; }
 
         public ApplicationUser User { get; set; }
-        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();  // Ensure this is initialized
+        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();  
     }
 
 }

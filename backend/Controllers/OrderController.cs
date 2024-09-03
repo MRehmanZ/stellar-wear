@@ -14,12 +14,11 @@ namespace Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // Ensure only authenticated users can access this controller
+    [Authorize] 
     public class OrderController : ControllerBase
     {
         private readonly BackendDbContext _context;
-        private readonly PaymentService _paymentService;
-        //private readonly ILogger<OrderController> _logger;
+        private readonly PaymentService _paymentService
 
         public OrderController(BackendDbContext context, PaymentService paymentService, ILogger<OrderController> logger)
         {
@@ -125,8 +124,6 @@ namespace Backend.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception and return a proper error message
-                //_logger.LogError(ex, "Error creating payment intent.");
                 return StatusCode(500, "An error occurred while creating the payment intent.");
             }
         }
@@ -166,11 +163,9 @@ namespace Backend.Controllers
                 _context.OrderItems.Add(orderItem);
             }
 
-            // Update the order status to completed
             order.Status = "Completed";
             await _context.SaveChangesAsync();
 
-            // Return the updated order details
             return Ok(order);
         }
 
@@ -194,12 +189,9 @@ namespace Backend.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error and return a proper message
                 return StatusCode(500, "An error occurred while fetching the order.");
             }
         }
-
-
 
         [HttpGet("user-orders")]
         public async Task<IActionResult> GetUserOrders()
@@ -218,7 +210,6 @@ namespace Backend.Controllers
         {
             return await _context.Orders.Include(o => o.OrderItems).ToListAsync();
         }
-
     }
 
     public class ConfirmPaymentRequest

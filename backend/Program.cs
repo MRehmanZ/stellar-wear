@@ -20,14 +20,11 @@ namespace Backend
 
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddControllers();
 
-            // Configure Entity Framework Core with SQL Server
             builder.Services.AddDbContext<BackendDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
 
-            // Configure Identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
             {
                 options.User.RequireUniqueEmail = true;
@@ -35,12 +32,10 @@ namespace Backend
                 .AddEntityFrameworkStores<BackendDbContext>()
                 .AddDefaultTokenProviders();
 
-            // Configure email settings from appsettings.json
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
             builder.Services.AddHttpClient();
 
-            // Add custom services (EmailService, AuthService)
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<PaymentService>();
             builder.Services.AddScoped<AuthService>();
@@ -84,7 +79,7 @@ namespace Backend
             {
                 options.AddPolicy("AllowReact", builder =>
                 {
-                    builder.WithOrigins("http://localhost:5173") // Replace with your React frontend URL
+                    builder.WithOrigins("http://localhost:5173") 
                            .AllowAnyMethod()
                            .AllowAnyHeader();
                 });

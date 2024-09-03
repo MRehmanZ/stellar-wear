@@ -105,7 +105,7 @@ const ProductDetail = () => {
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold">{product.name}</h1>
-            <p className="text-xl font-semibold mt-2">£{product.price?.tofixed(2)}</p>
+            <p className="text-xl font-semibold mt-2">£{product.price?.toFixed(2)}</p>
           </div>
           <div className="flex items-center space-x-2">
             {[...Array(5)].map((_, i) => (

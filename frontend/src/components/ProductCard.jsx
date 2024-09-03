@@ -68,7 +68,7 @@ const ProductCard = ({ product }) => {
             <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">{product.rating.toFixed(1)}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold">£{product.price?.tofixed(2)}</span>
+            <span className="text-2xl font-bold">£{product.price?.toFixed(2)}</span>
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="icon" onClick={(e) => { e.stopPropagation(); e.preventDefault(); decrementQuantity(); }}>
                 <Minus className="h-4 w-4" />

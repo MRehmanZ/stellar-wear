@@ -27,6 +27,13 @@ export const AuthProvider = ({ children }) => {
       setIsLoggedIn(false);
       setUser(null);
     }
+
+    const onStorageChange = () => {
+      setIsLoggedIn(!!localStorage.getItem('token'));
+    };
+    
+    window.addEventListener('storage', onStorageChange);
+    return () => window.removeEventListener('storage', onStorageChange);
   }, []);
 
   const login = async (userData) => {

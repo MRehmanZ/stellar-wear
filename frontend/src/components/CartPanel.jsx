@@ -41,7 +41,7 @@ const CartPanel = ({ isOpen, onClose }) => {
                 </div>
                 <div className="flex-grow">
                   <h3 className="font-medium text-base">{item.name}</h3>
-                  <p className="text-sm text-muted-foreground">£{item.price?.tofixed(2)}</p>
+                  <p className="text-sm text-muted-foreground">£{item.price?.toFixed(2)}</p>
                   <div className="flex items-center mt-2">
                     <Button 
                       variant="outline" 
@@ -74,7 +74,7 @@ const CartPanel = ({ isOpen, onClose }) => {
           <div className="border-t pt-4 mt-4 sticky bottom-0 bg-white z-10">
             <div className="flex justify-between items-center mb-4 px-4">
               <span className="text-sm font-medium text-muted-foreground">Subtotal:</span>
-              <span className="text-lg font-semibold">£{totalprice?.tofixed(2)}</span>
+              <span className="text-lg font-semibold">£{totalprice?.toFixed(2)}</span>
             </div>
             <div className="px-4 pb-4">
               <Button className="w-full py-2" onClick={handleCheckout}>

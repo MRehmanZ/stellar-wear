@@ -7,6 +7,7 @@ import { FaStar } from "react-icons/fa";
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { Slider } from "@/components/ui/slider";
+import { Link } from 'react-router-dom';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -129,6 +130,7 @@ const ProductsPage = () => {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredAndSortedProducts.map((product) => (
+            <Link to={`/product/${product.id}`} className="block group">
             <div
               key={product.id}
               className="group relative rounded-lg overflow-hidden shadow-lg transition-all hover:shadow-xl bg-white"
@@ -165,6 +167,7 @@ const ProductsPage = () => {
                 </div>
               </div>
             </div>
+            </Link>
           ))}
         </div>
       )}

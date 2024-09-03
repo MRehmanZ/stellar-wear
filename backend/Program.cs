@@ -30,7 +30,7 @@ namespace Backend
             // Configure Identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
             {
-                options.User.RequireUniqueEmail = false; // for testing purposes
+                options.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<BackendDbContext>()
                 .AddDefaultTokenProviders();
@@ -167,6 +167,10 @@ namespace Backend
                 adminUser = new ApplicationUser { UserName = "admin", Email = adminEmail };
                 await userManager.CreateAsync(adminUser, "@Hello1234");
                 await userManager.AddToRoleAsync(adminUser, "Admin");
+                
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(adminUser);
+
+                await userManager.ConfirmEmailAsync(adminUser, token);
             }
         
         }

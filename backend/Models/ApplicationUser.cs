@@ -7,7 +7,6 @@ namespace Backend.Models
     {
         public ICollection<IdentityUserRole<Guid>> UserRoles { get; set; }
 
-        // Navigation properties
         public ICollection<Order> Orders { get; set; }
     }
 }

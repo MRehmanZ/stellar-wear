@@ -52,7 +52,7 @@ namespace Backend.Controllers
         [HttpGet("verify-email")]
         public async Task<IActionResult> VerifyEmail(string userId, string token)
         {
-            var user = await _authService.FindByEmailAsync(userId);
+            var user = await _authService.FindByIdAsync(userId);
             if (user == null)
             {
                 return NotFound("User not found.");

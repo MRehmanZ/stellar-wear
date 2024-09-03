@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 
 namespace Backend.Controllers
 {
@@ -18,7 +19,7 @@ namespace Backend.Controllers
     public class OrderController : ControllerBase
     {
         private readonly BackendDbContext _context;
-        private readonly PaymentService _paymentService
+        private readonly PaymentService _paymentService;
 
         public OrderController(BackendDbContext context, PaymentService paymentService, ILogger<OrderController> logger)
         {
@@ -174,7 +175,7 @@ namespace Backend.Controllers
         {
             try
             {
-                var userId = Guid.Parse(User.FindFirst("sub")?.Value);
+                var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
                 var order = await _context.Orders
                                           .Include(o => o.OrderItems)
                                           .Include(o => o.Address) // Include the address

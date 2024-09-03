@@ -43,6 +43,11 @@ namespace Backend.Services
             _emailService.SendEmail(user.Email, emailSubject, emailBody);
         }
 
+        public async Task<ApplicationUser> FindByIdAsync(string userId)
+        {
+            return await _userManager.FindByIdAsync(userId);
+        }
+
         public async Task<ApplicationUser> FindByEmailAsync(string email)
         {
             return await _userManager.FindByEmailAsync(email);

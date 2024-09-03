@@ -19,10 +19,10 @@ const OrderDetails = () => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem('token')}`,
-            "UserId": localStorage.getItem('userId'),
           },
         });
 
+        console.log(response)
         if (response.ok) {
           const data = await response.json();
           setOrder(data); // Set the order state with fetched data

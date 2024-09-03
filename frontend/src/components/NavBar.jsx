@@ -23,7 +23,7 @@ const NavBar = () => {
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
-        setCategories(data.$values);
+        setCategories(data.$values?.reverse());
       } catch (error) {
         console.error("Error fetching categories:", error);
       }

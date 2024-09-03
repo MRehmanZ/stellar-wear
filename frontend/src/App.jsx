@@ -32,6 +32,7 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import Profile from "./components/Profile";
 import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
+import Wishlist from "./components/Wishlist";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -69,6 +70,7 @@ function App() {
               <Route exact path="/order/:orderId" element={<OrderDetails />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/wishlist" element={<Wishlist />} />
               
               {/* Admin Routes */}
               <Route 

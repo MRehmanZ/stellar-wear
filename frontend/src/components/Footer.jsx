@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { subscribeToNewsletter } from '../services/NewsletterService';
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    try {
+      await subscribeToNewsletter(email);
+      toast.success("Subscribed to newsletter successfully!");
+      setEmail('');
+    } catch (error) {
+      toast.error("Failed to subscribe to newsletter.");
+    }
+  };
+
   return (
     <footer className="bg-gray-900 text-white p-8 mt-10">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -31,15 +48,17 @@ const Footer = () => {
           <p className="text-sm mb-4 text-muted-foreground">
             Subscribe to our newsletter and stay updated on the latest products, deals, and offers.
           </p>
-          <form className="flex flex-col md:flex-row items-center">
-            <input
+          <form onSubmit={handleSubscribe} className="flex flex-col md:flex-row items-center">
+            <Input
               type="email"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="flex-grow p-3 rounded mb-2 md:mb-0 md:mr-2 text-gray-900"
             />
-            <button className="bg-primary text-white py-3 px-6 rounded hover:bg-primary-dark">
+            <Button type="submit" className="bg-primary text-white py-3 px-6 rounded hover:bg-primary-dark">
               Subscribe
-            </button>
+            </Button>
           </form>
         </div>
 

@@ -16,6 +16,8 @@ namespace Backend.Models
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<WishlistItem> WishlistItems { get; set; }
+        public DbSet<NewsletterSubscriber> NewsletterSubscribers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -112,6 +114,16 @@ namespace Backend.Models
                       .HasForeignKey(oi => oi.ProductId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
+
+            modelBuilder.Entity<WishlistItem>()
+                .HasOne(w => w.Product)
+                .WithMany()
+                .HasForeignKey(w => w.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<NewsletterSubscriber>()
+                .HasIndex(n => n.Email)
+                .IsUnique();
         }
     }
 }

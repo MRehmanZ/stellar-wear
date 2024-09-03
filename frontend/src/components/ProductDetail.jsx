@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Star, ShoppingCart, Heart, Plus, Minus } from 'lucide-react';
 import { getProduct } from '../services/ProductService';
-
+import { addToWishlist, removeFromWishlist, getWishlist } from '../services/WishlistService';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -23,6 +23,7 @@ const ProductDetail = () => {
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
   const [quantity, setQuantity] = useState(1); // New quantity state
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const { addToCart } = useCart();
 
@@ -40,7 +41,17 @@ const ProductDetail = () => {
       }
     };
 
+    const fetchWishlist = async () => {
+      try {
+        const wishlist = await getWishlist();
+        setIsWishlisted(wishlist.$values.some(item => item.productId === id));
+      } catch (error) {
+        console.error('Error fetching wishlist data:', error);
+      }
+    };
+
     fetchProduct();
+    fetchWishlist();
   }, [id]);
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
@@ -50,6 +61,22 @@ const ProductDetail = () => {
     if (product) {
       addToCart(product, quantity, selectedSize, selectedColor);
       toast.success(`${quantity} ${product.name}(s) added to cart!`, { position: "bottom-right" });
+    }
+  };
+
+  const handleWishlistToggle = async () => {
+    try {
+      if (isWishlisted) {
+        await removeFromWishlist(product.id);
+        setIsWishlisted(false);
+        toast.success('Removed from wishlist');
+      } else {
+        await addToWishlist(product.id);
+        setIsWishlisted(true);
+        toast.success('Added to wishlist');
+      }
+    } catch (error) {
+      toast.error('Error updating wishlist');
     }
   };
 
@@ -150,8 +177,9 @@ const ProductDetail = () => {
               <ShoppingCart className="w-4 h-4 mr-2" />
               Add to Cart
             </Button>
-            <Button variant="outline">
-              <Heart className="w-4 h-4" />
+            <Button variant="outline" onClick={handleWishlistToggle}>
+              <Heart className={`w-4 h-4 ${isWishlisted ? 'text-red-500' : ''}`} />
+              {isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
             </Button>
           </div>
           <div>

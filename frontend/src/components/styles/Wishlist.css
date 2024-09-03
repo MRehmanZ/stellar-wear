@@ -1,0 +1,18 @@
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .remove-btn {
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .remove-btn:hover {
+    background-color: #ff4d4d;
+    transform: scale(1.1);
+  }
+  

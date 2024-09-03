@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../hooks/useAuth';
 import CartPanel from './CartPanel';
 import { fetchCategories } from '../services/CategoryService';
+import { Heart } from 'lucide-react';
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -74,10 +75,13 @@ const NavBar = () => {
         </div>
 
         <div className="hidden md:flex items-center space-x-6">
-          <Link to="/wishlist" className="hover:text-gray-300 flex items-center">
-            <FaHeart className="text-2xl mr-2"  />
-            Wishlist
-          </Link>
+        <button
+            onClick={() => navigate('/wishlist')}
+            className="relative flex items-center justify-center p-2 rounded hover:bg-gray-700"
+          >
+            <Heart className="w-6 h-6" />
+            <span className="sr-only">Wishlist</span>
+          </button>
           <div className="relative">
             <button
               onClick={toggleDropdown}

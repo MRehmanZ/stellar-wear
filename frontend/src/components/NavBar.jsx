@@ -53,7 +53,7 @@ const NavBar = () => {
 
   return (
     <>
-      <nav className="sticky top-0 bg-gray-800 text-white p-4 shadow-md flex items-center justify-between z-50">
+      <nav className="sticky top-0 bg-gray-900 text-white p-4 shadow-md flex items-center justify-between z-50">
         <div className="md:hidden">
           <button onClick={toggleMenu} className="text-2xl">
             {isMenuOpen ? <FaTimes /> : <FaBars />}

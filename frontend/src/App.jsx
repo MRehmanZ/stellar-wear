@@ -27,6 +27,7 @@ import ShoesPage from "./components/ShoesPage";
 import AccessoriesPage from "./components/AccessoriesPage";
 import ManageCategories from "./components/admin/ManageCategories";
 import ProductDetail from "./components/ProductDetail";
+import ConsentBanner from "./components/ConsentBanner";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -37,6 +38,7 @@ function App() {
         <Router>
           <NavBar />
           <Toaster />
+          <ConsentBanner />
           <div>
             <Routes>
               <Route exact path="/" element={<Home />} />

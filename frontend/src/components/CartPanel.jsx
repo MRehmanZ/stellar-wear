@@ -17,6 +17,17 @@ const CartPanel = ({ isOpen, onClose }) => {
     navigate('/checkout');
   };
 
+  const handleDecrement = (itemId, currentQuantity) => {
+    const newQuantity = currentQuantity - 1;
+    if (newQuantity >= 1) {
+      updateCartItemQuantity(itemId, newQuantity);
+    }
+  };
+
+  const handleIncrement = (itemId, currentQuantity) => {
+    updateCartItemQuantity(itemId, currentQuantity + 1);
+  };
+
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className="w-full sm:max-w-md p-0 flex flex-col h-full">
@@ -24,6 +35,7 @@ const CartPanel = ({ isOpen, onClose }) => {
           <div className="flex justify-between items-center">
             <SheetTitle className="text-lg font-semibold">Your Cart</SheetTitle>
             <Button variant="ghost" size="icon" onClick={onClose}>
+              <X className="h-4 w-4" />
             </Button>
           </div>
         </SheetHeader>
@@ -46,7 +58,7 @@ const CartPanel = ({ isOpen, onClose }) => {
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      onClick={() => updateCartItemQuantity(item.id, item.quantity - 1)}
+                      onClick={() => handleDecrement(item.id, item.quantity)}
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
@@ -54,7 +66,7 @@ const CartPanel = ({ isOpen, onClose }) => {
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      onClick={() => updateCartItemQuantity(item.id, item.quantity + 1)}
+                      onClick={() => handleIncrement(item.id, item.quantity)}
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -74,7 +86,7 @@ const CartPanel = ({ isOpen, onClose }) => {
           <div className="border-t pt-4 mt-4 sticky bottom-0 bg-white z-10">
             <div className="flex justify-between items-center mb-4 px-4">
               <span className="text-sm font-medium text-muted-foreground">Subtotal:</span>
-              <span className="text-lg font-semibold">£{totalprice?.toFixed(2)}</span>
+              <span className="text-lg font-semibold">£{totalPrice.toFixed(2)}</span>
             </div>
             <div className="px-4 pb-4">
               <Button className="w-full py-2" onClick={handleCheckout}>

@@ -106,6 +106,103 @@ namespace Backend.Seeds
                     {
                         new Review { Id = Guid.NewGuid(), Rating = 3, Comment = "Color is not as vibrant as expected.", UserName = "Frank White" }
                     }
+                },
+                new Product
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Navy Wool Suit",
+                    Description = "A sophisticated navy wool suit, ideal for business and formal events.",
+                    Price = 349.99M,
+                    Category = "Suits",
+                    Rating = 5,
+                    ImageUrl = "/images/products/navy-wool-suit.jpg",
+                    Sizes = new List<string> { "38", "40", "42", "44" },
+                    Colors = new List<string> { "Navy" },
+                    Reviews = new List<Review>
+                    {
+                        new Review { Id = Guid.NewGuid(), Rating = 5, Comment = "High quality fabric and perfect fit.", UserName = "George Clark" }
+                    }
+                },
+                new Product
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Leather Oxford Shoes",
+                    Description = "Classic black leather Oxford shoes for a polished and professional look.",
+                    Price = 199.99M,
+                    Category = "Shoes",
+                    Rating = 5,
+                    ImageUrl = "/images/products/leather-oxford-shoes.jpg",
+                    IsFeatured = false,
+                    Sizes = new List<string> { "8", "9", "10", "11", "12" },
+                    Colors = new List<string> { "Black" },
+                    Reviews = new List<Review>
+                    {
+                        new Review { Id = Guid.NewGuid(), Rating = 5, Comment = "Comfortable and elegant. Perfect for the office.", UserName = "Henry King" }
+                    }
+                },
+                new Product
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Slim Fit Dress Shirt",
+                    Description = "A crisp white slim fit dress shirt, essential for any wardrobe.",
+                    Price = 59.99M,
+                    Category = "Shirts",
+                    ImageUrl = "/images/products/slim-fit-dress-shirt.jpg",
+                    Sizes = new List<string> { "S", "M", "L", "XL" },
+                    Colors = new List<string> { "White" },
+                    Reviews = new List<Review>
+                    {
+                        new Review { Id = Guid.NewGuid(), Rating = 4, Comment = "Great fit but wrinkles easily.", UserName = "James Lee" }
+                    }
+                },
+                new Product
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Luxury Silk Pocket Square",
+                    Description = "Add a touch of elegance to your suit with this luxury silk pocket square.",
+                    Price = 29.99M,
+                    Category = "Accessories",
+                    Rating = 5,
+                    ImageUrl = "/images/products/silk-pocket-square.jpg",
+                    Sizes = new List<string> { "One Size" },
+                    Colors = new List<string> { "Burgundy", "Navy", "Grey" },
+                    Reviews = new List<Review>
+                    {
+                        new Review { Id = Guid.NewGuid(), Rating = 5, Comment = "Perfect accent for my suits.", UserName = "Chris Baker" }
+                    }
+                },
+                new Product
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Men's Chronograph Watch",
+                    Description = "A stylish chronograph watch with a stainless steel band.",
+                    Price = 249.99M,
+                    Category = "Watches",
+                    Rating = 4,
+                    ImageUrl = "/images/products/chronograph-watch.jpg",
+                    IsFeatured = true,
+                    Sizes = new List<string> { "One Size" },
+                    Colors = new List<string> { "Silver", "Black" },
+                    Reviews = new List<Review>
+                    {
+                        new Review { Id = Guid.NewGuid(), Rating = 4, Comment = "Elegant design but slightly heavy.", UserName = "Daniel Wilson" }
+                    }
+                },
+                new Product
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Black Leather Belt",
+                    Description = "A versatile black leather belt with a polished silver buckle.",
+                    Price = 39.99M,
+                    Category = "Accessories",
+                    Rating = 5,
+                    ImageUrl = "/images/products/black-leather-belt.jpg",
+                    Sizes = new List<string> { "32", "34", "36", "38", "40" },
+                    Colors = new List<string> { "Black" },
+                    Reviews = new List<Review>
+                    {
+                        new Review { Id = Guid.NewGuid(), Rating = 5, Comment = "Solid construction and looks great.", UserName = "Martin Cook" }
+                    }
                 }
             };
 

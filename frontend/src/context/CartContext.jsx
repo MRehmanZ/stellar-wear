@@ -66,11 +66,19 @@ export const CartProvider = ({ children }) => {
     return mergedCart;
   };
 
-
+  const updateCartItemQuantity = (productId, newQuantity) => {
+    setCartItems((prevItems) =>
+        prevItems.map((item) =>
+            item.id === productId
+                ? { ...item, quantity: newQuantity }
+                : item
+        )
+    );
+};
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, updateItemQuantity, clearCart }}
+      value={{ cartItems, addToCart, removeFromCart, updateItemQuantity, clearCart, updateCartItemQuantity }}
     >
       {children}
     </CartContext.Provider>

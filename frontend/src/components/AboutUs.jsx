@@ -50,7 +50,7 @@ const AboutUs = () => {
         <div className="grid md:grid-cols-3 gap-8">
           <Card className="shadow-lg">
             <CardHeader className="flex justify-center">
-              <img src="/images/about-us/team-member-1.jpg" alt="Team Member" className="rounded-full h-32 w-32 object-cover shadow-lg" />
+              <img src={`${import.meta.env.VITE_API_BASE_URL}/images/ceo.jpeg`}  alt="Team Member" className="rounded-full h-32 w-32 object-cover shadow-lg" />
             </CardHeader>
             <CardContent className="text-center">
               <h3 className="text-xl font-semibold text-gray-800">Muhammad Rehman Zulfiquar</h3>
@@ -59,7 +59,7 @@ const AboutUs = () => {
           </Card>
           <Card className="shadow-lg">
             <CardHeader className="flex justify-center">
-              <img src="/images/about-us/team-member-2.jpg" alt="Team Member" className="rounded-full h-32 w-32 object-cover shadow-lg" />
+              <img src={`${import.meta.env.VITE_API_BASE_URL}/images/female-avatar.jpg`} alt="Team Member" className="rounded-full h-32 w-32 object-cover shadow-lg" />
             </CardHeader>
             <CardContent className="text-center">
               <h3 className="text-xl font-semibold text-gray-800">Janette LaCroix</h3>
@@ -68,7 +68,7 @@ const AboutUs = () => {
           </Card>
           <Card className="shadow-lg">
             <CardHeader className="flex justify-center">
-              <img src="/images/about-us/team-member-3.jpg" alt="Team Member" className="rounded-full h-32 w-32 object-cover shadow-lg" />
+              <img src={`${import.meta.env.VITE_API_BASE_URL}/images/male-avatar.png`} alt="Team Member" className="rounded-full h-32 w-32 object-cover shadow-lg" />
             </CardHeader>
             <CardContent className="text-center">
               <h3 className="text-xl font-semibold text-gray-800">John Johnson</h3>

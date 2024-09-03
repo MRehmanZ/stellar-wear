@@ -1,25 +1,29 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { CreditCardIcon, LockIcon, MinusIcon, PlusIcon, TrashIcon } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../hooks/useAuth";
+import { toast } from "sonner";
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import '@react-google-maps/api';
 
 const Checkout = () => {
   const { cartItems, clearCart, updateCartItemQuantity, removeFromCart } = useCart();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [addressError, setAddressError] = useState("");
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
   const { isLoggedIn, user, setUser } = useAuth();
-  
+
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState("");
@@ -62,45 +66,72 @@ const Checkout = () => {
 
   const handleAddAddress = async () => {
     setIsLoading(true);
+    setAddressError("");
+
+    if (!newAddress.street || !newAddress.city || !newAddress.state || !newAddress.postalCode || !newAddress.country) {
+      setAddressError("Please fill in all fields before submitting.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/address`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem('token')}`,  // Include the token in the header
-            },
-            body: JSON.stringify({...newAddress, UserId: localStorage.getItem("userId")}),  // Send the address details
-        });
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/address`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ ...newAddress, UserId: localStorage.getItem("userId") }),
+      });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Error details:", errorData);
-            throw new Error("Failed to add address.");
-        }
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error details:", errorData);
+        throw new Error(errorData.message || "Failed to add address.");
+      }
 
-        const addressData = await response.json();
-        console.log(addressData.id)
-        setSelectedAddress(addressData.id);
-        setIsAddingAddress(false);
+      const addressData = await response.json();
+      setSelectedAddress(addressData.id);
+      setIsAddingAddress(false);
 
-        setUser(prevUser => ({
-          ...prevUser,
-          addresses: [...(prevUser?.addresses || []), addressData],
-        }));
+      setUser(prevUser => ({
+        ...prevUser,
+        addresses: [...(prevUser?.addresses || []), addressData],
+      }));
+
+      toast.success("Address added successfully!");
     } catch (error) {
-        console.error("Error adding address:", error);
-        setErrorMessage(error.message || "Failed to add address.");
+      console.error("Error adding address:", error);
+      setAddressError(error.message || "Failed to add address.");
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
+  };
 
+  const handlePlaceSelect = (place) => {
+    if (place) {
+      const addressComponents = place.value.terms;
+      const streetNumber = addressComponents[0]?.value || '';
+      const route = addressComponents[1]?.value || '';
+      const locality = addressComponents[2]?.value || '';
+      const administrativeArea = addressComponents[2]?.value || addressComponents[3]?.value || '';
+      const postalCode =  addressComponents[3]?.value || addressComponents[2]?.value || "";
+      const country = addressComponents[4]?.value || addressComponents[3]?.value ||'';
+
+      setNewAddress({
+        street: `${streetNumber} ${route}`.trim(),
+        city: locality,
+        state: administrativeArea,
+        postalCode: postalCode,
+        country: country,
+      });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-  
+
     try {
       const orderResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/order/create-order`, {
         method: "POST",
@@ -117,49 +148,43 @@ const Checkout = () => {
             ProductName: item.name,
             Quantity: item.quantity,
             Price: item.price,
-            ImageUrl: item.imageUrl
+            ImageUrl: item.imageUrl,
           })),
           TotalAmount: subtotal + shippingCost,
         }),
       });
 
-      // console.log(await orderResponse.json())
-
       const orderData = await orderResponse.json();
 
-      
-  
       if (!orderResponse.ok) {
-        throw new Error("Failed to create order");
+        throw new Error(orderData.message || "Failed to create order");
       }
-  
+
       const orderId = orderData.orderId;
-  
+
       const paymentIntentResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/order/create-payment-intent`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ orderId: orderId.toString() }), 
+        body: JSON.stringify({ orderId: orderId.toString() }),
       });
-  
+
       const { clientSecret } = await paymentIntentResponse.json();
-  
+
       if (!clientSecret) {
         throw new Error("Client secret not returned by backend.");
       }
-  
+
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
         },
       });
-  
-     console.log(cartItems)
+
       if (result.error) {
         setErrorMessage(result.error.message);
-        setIsLoading(false);
       } else if (result.paymentIntent.status === "succeeded") {
         const confirmResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/order/confirm-payment`, {
           method: "POST",
@@ -175,20 +200,20 @@ const Checkout = () => {
               ProductName: item.name,
               Quantity: item.quantity,
               Price: item.price,
-              ImageUrl: item.imageUrl
+              ImageUrl: item.imageUrl,
             })),
           }),
         });
-  
+
         const order = await confirmResponse.json();
-        console.log("Order: " + order)
-  
+
         clearCart();
         navigate("/order-confirmation", { state: { order } });
       }
     } catch (error) {
       console.error("Error during payment processing:", error);
       setErrorMessage(error.message || "Payment failed. Please try again.");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -220,17 +245,53 @@ const Checkout = () => {
                   </Select>
                 ) : (
                   <div className="grid gap-4">
+                    <Label htmlFor="address">Address</Label>
+                    <GooglePlacesAutocomplete
+                      apiKey={import.meta.env.VITE_GOOGLE_PLACES_API_KEY}
+                      selectProps={{
+                        onChange: handlePlaceSelect,
+                        placeholder: 'Search for an address',
+                      }}
+                    />
                     <Label htmlFor="street">Street</Label>
-                    <Input id="street" value={newAddress.street} onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })} required />
+                    <Input
+                      id="street"
+                      value={newAddress.street}
+                      onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
+                      required
+                    />
                     <Label htmlFor="city">City</Label>
-                    <Input id="city" value={newAddress.city} onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })} required />
+                    <Input
+                      id="city"
+                      value={newAddress.city}
+                      onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                      required
+                    />
                     <Label htmlFor="state">State</Label>
-                    <Input id="state" value={newAddress.state} onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })} required />
+                    <Input
+                      id="state"
+                      value={newAddress.state}
+                      onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
+                      required
+                    />
                     <Label htmlFor="postalCode">Postal Code</Label>
-                    <Input id="postalCode" value={newAddress.postalCode} onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })} required />
+                    <Input
+                      id="postalCode"
+                      value={newAddress.postalCode}
+                      onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
+                      required
+                    />
                     <Label htmlFor="country">Country</Label>
-                    <Input id="country" value={newAddress.country} onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })} required />
-                    <Button onClick={handleAddAddress} disabled={isLoading}>Add Address</Button>
+                    <Input
+                      id="country"
+                      value={newAddress.country}
+                      onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })}
+                      required
+                    />
+                    {addressError && <p className="text-red-500">{addressError}</p>}
+                    <Button onClick={handleAddAddress} disabled={isLoading || !newAddress.street || !newAddress.city || !newAddress.state || !newAddress.postalCode || !newAddress.country}>
+                      {isLoading ? "Adding Address..." : "Add Address"}
+                    </Button>
                   </div>
                 )}
                 {!isAddingAddress && user.addresses && user.addresses.length > 0 && (
@@ -296,6 +357,7 @@ const Checkout = () => {
                 <h3 className="text-xl font-semibold">Payment Details</h3>
                 <CardElement className="p-3 border rounded-md" />
               </div>
+              {errorMessage && <p className="text-red-500">{errorMessage}</p>}
               <div className="space-y-4">
                 <h3 className="text-xl font-semibold">Order Summary</h3>
                 <div className="bg-gray-50 p-4 rounded-lg space-y-2">
@@ -318,8 +380,8 @@ const Checkout = () => {
           </form>
         </CardContent>
         <CardFooter>
-          <Button className="w-full" size="lg" type="submit" onClick={handleSubmit} disabled={isLoading || !stripe || !elements}>
-            <LockIcon className="mr-2 h-5 w-5" /> Pay £{total.toFixed(2)}
+          <Button className="w-full" size="lg" type="submit" onClick={handleSubmit} disabled={isLoading || !stripe || !elements || selectedAddress.length === 0 }>
+            <LockIcon className="mr-2 h-5 w-5" /> {isLoading ? ("Processing...") : (`Pay £${total.toFixed(2)}`)}
           </Button>
         </CardFooter>
       </Card>

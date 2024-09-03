@@ -75,25 +75,20 @@ const NavBar = () => {
         </div>
 
         <div className='md:hidden font-bold text-2xl flex items-center justify-center'>
-        
-                <Link to="/wishlist" onClick={toggleMenu} className="flex items-center justify-center hover:text-gray-300">
-                  <FaHeart className="mr-2" />
-                </Link>
-              
-                <Link to={isLoggedIn ? '/profile' : '/login'} onClick={toggleMenu} className="flex items-center justify-center hover:text-gray-300">
-                  <FaUserCircle className="mr-2" />
-                </Link>
-              
-              
-                <button onClick={toggleCart} className="flex items-center justify-center hover:text-gray-300 relative">
-                  <FaShoppingCart className="text-2xl" />
-                  {cartItemCount > 0 && (
-                    <span className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 bg-gray-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                      {cartItemCount}
-                    </span>
-                  )}
-                </button>
-              
+          <Link to="/wishlist" className="flex items-center justify-center hover:text-gray-300">
+            <FaHeart className="mr-2" />
+          </Link>
+          <button onClick={toggleDropdown} className="flex items-center justify-center hover:text-gray-300">
+            <FaUserCircle className="mr-2" />
+          </button>
+          <button onClick={toggleCart} className="flex items-center justify-center hover:text-gray-300 relative">
+            <FaShoppingCart className="text-2xl" />
+            {cartItemCount > 0 && (
+              <span className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 bg-gray-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
+          </button>
         </div>
 
         <div className="hidden md:flex items-center space-x-6">

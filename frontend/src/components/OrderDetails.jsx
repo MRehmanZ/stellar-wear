@@ -22,7 +22,6 @@ const OrderDetails = () => {
           },
         });
 
-        console.log(response)
         if (response.ok) {
           const data = await response.json();
           setOrder(data); // Set the order state with fetched data

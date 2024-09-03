@@ -89,11 +89,11 @@ const NavBar = () => {
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg z-20">
                 <Link
-                  to={isLoggedIn ? '/profile' : '/login'}
+                  to={isLoggedIn ? '/' : '/login'}
                   onClick={toggleDropdown}
-                  className="block px-4 py-2 hover:bg-gray-200"
+                  className="block px-4 py-2"
                 >
-                  {isLoggedIn ? 'Profile' : 'Login'}
+                  {isLoggedIn ? user?.name : 'Login'}
                 </Link>
                 {isLoggedIn && (
                   <>

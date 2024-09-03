@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Star, ShoppingCart, Heart } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Plus, Minus } from 'lucide-react';
 import { getProduct } from '../services/ProductService';
 
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import axios from 'axios';
 import { fetchUser } from '../services/AuthService';
 import { toast } from "sonner";
+import { useCart } from '../context/CartContext';
 
 const ProductDetail = () => {
   const { id } = useParams(); // Get product ID from URL
@@ -21,6 +22,9 @@ const ProductDetail = () => {
   const [reviewText, setReviewText] = useState('');
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
+  const [quantity, setQuantity] = useState(1); // New quantity state
+
+  const { addToCart } = useCart();
 
   useEffect(() => {
     // Fetch product data from backend
@@ -39,17 +43,13 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-  const handleAddToCart = async () => {
-    try {
-      await axios.post('/api/cart', {
-        productId: product.id,
-        size: selectedSize,
-        color: selectedColor,
-        quantity: 1,
-      });
-      alert('Product added to cart!');
-    } catch (error) {
-      console.error('Error adding to cart:', error);
+  const incrementQuantity = () => setQuantity((prev) => prev + 1);
+  const decrementQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product, quantity, selectedSize, selectedColor);
+      toast.success(`${quantity} ${product.name}(s) added to cart!`, { position: "bottom-right" });
     }
   };
 
@@ -58,8 +58,6 @@ const ProductDetail = () => {
       const user = await fetchUser(localStorage.getItem("userId"));
 
       if (user) {
-        console.log(`user: ${JSON.stringify(user.userName)}`);
-
         const newReview = {
           ProductId: product.id,
           rating,
@@ -68,25 +66,24 @@ const ProductDetail = () => {
         };
 
         const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/review`,
-        newReview,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
-  
-        console.log(response.data)
+          `${import.meta.env.VITE_API_BASE_URL}/api/review`,
+          newReview,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        );
+      
         setReviews([...reviews, response.data]);
         setReviewText('');
         setRating(0);
       } else {
-        toast.warning("Please login to submit a review.")
+        toast.warning("Please login to submit a review.");
       }
     } catch (error) {
-      toast.error("Error submitting review. Please try again.")
+      toast.error("Error submitting review. Please try again.");
       console.error('Error submitting review:', error);
     }
   };
@@ -138,6 +135,15 @@ const ProductDetail = () => {
                 </div>
               ))}
             </RadioGroup>
+          </div>
+          <div className="flex space-x-4 items-center">
+            <Button variant="outline" size="icon" onClick={decrementQuantity}>
+              <Minus className="h-4 w-4" />
+            </Button>
+            <span>{quantity}</span>
+            <Button variant="outline" size="icon" onClick={incrementQuantity}>
+              <Plus className="h-4 w-4" />
+            </Button>
           </div>
           <div className="flex space-x-4">
             <Button className="flex-1" onClick={handleAddToCart}>

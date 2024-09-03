@@ -17,6 +17,7 @@ namespace Backend.Models
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,6 +62,24 @@ namespace Backend.Models
                 entity.Property(p => p.Category).HasMaxLength(100);
                 entity.Property(p => p.Rating).HasDefaultValue(0);
                 entity.Property(p => p.IsFeatured).HasDefaultValue(false);
+                entity.Property(p => p.Sizes).HasConversion(
+                    s => string.Join(',', s),
+                    s => s.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
+                entity.Property(p => p.Colors).HasConversion(
+                    c => string.Join(',', c),
+                    c => c.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
+            });
+
+            modelBuilder.Entity<Review>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+                entity.Property(r => r.UserName).IsRequired().HasMaxLength(100);
+                entity.Property(r => r.Comment).IsRequired().HasMaxLength(1000);
+                entity.Property(r => r.Rating).IsRequired();
+                entity.HasOne(r => r.Product)
+                    .WithMany(p => p.Reviews)
+                    .HasForeignKey(r => r.ProductId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Order>(entity =>

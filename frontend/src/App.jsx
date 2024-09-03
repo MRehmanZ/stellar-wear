@@ -26,6 +26,7 @@ import TiesPage from "./components/TiesPage";
 import ShoesPage from "./components/ShoesPage";
 import AccessoriesPage from "./components/AccessoriesPage";
 import ManageCategories from "./components/admin/ManageCategories";
+import ProductDetail from "./components/ProductDetail";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -45,6 +46,8 @@ function App() {
               <Route exact path="/shoes" element={<ShoesPage />} />
               <Route exact path="/accessories" element={<AccessoriesPage />} />
               <Route path="products" element={<ProductsPage />} />
+              <Route exact path="/product/:id" element={<ProductDetail />} />
+
               <Route
                 exact
                 path="/checkout"

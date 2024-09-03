@@ -33,6 +33,13 @@ namespace Backend.Seeds
                     Rating = 4,
                     ImageUrl = "/images/products/black-suit.jpg",
                     IsFeatured = true,
+                    Sizes = new List<string> { "38", "40", "42", "44" },
+                    Colors = new List<string> { "Black", "Charcoal" },
+                    Reviews = new List<Review>
+                    {
+                        new Review { Id = Guid.NewGuid(), Rating = 4, Comment = "Great quality suit.", UserName = "John Doe" },
+                        new Review { Id = Guid.NewGuid(), Rating = 5, Comment = "Perfect fit and finish.", UserName = "Jane Smith" }
+                    }
                 },
                 new Product
                 {
@@ -44,6 +51,12 @@ namespace Backend.Seeds
                     Rating = 5,
                     ImageUrl = "/images/products/blue-tie.jpg",
                     IsFeatured = true,
+                    Sizes = new List<string> { "One Size" },
+                    Colors = new List<string> { "Blue" },
+                    Reviews = new List<Review>
+                    {
+                        new Review { Id = Guid.NewGuid(), Rating = 5, Comment = "Matches perfectly with my suit.", UserName = "Alice Brown" }
+                    }
                 },
                 new Product
                 {
@@ -55,6 +68,12 @@ namespace Backend.Seeds
                     Rating = 5,
                     ImageUrl = "/images/products/brown-leather-shoes.jpg",
                     IsFeatured = true,
+                    Sizes = new List<string> { "8", "9", "10", "11" },
+                    Colors = new List<string> { "Brown" },
+                    Reviews = new List<Review>
+                    {
+                        new Review { Id = Guid.NewGuid(), Rating = 5, Comment = "Very comfortable and stylish.", UserName = "Charlie Davis" }
+                    }
                 },
                 new Product
                 {
@@ -64,7 +83,13 @@ namespace Backend.Seeds
                     Price = 329.99M,
                     Category = "Suits",
                     Rating = 5,
-                    ImageUrl = "/images/products/grey-suit.jpg"
+                    ImageUrl = "/images/products/grey-suit.jpg",
+                    Sizes = new List<string> { "38", "40", "42", "44" },
+                    Colors = new List<string> { "Grey", "Charcoal" },
+                    Reviews = new List<Review>
+                    {
+                        new Review { Id = Guid.NewGuid(), Rating = 4, Comment = "Good quality but slightly tight.", UserName = "Edward Green" }
+                    }
                 },
                 new Product
                 {
@@ -74,7 +99,13 @@ namespace Backend.Seeds
                     Price = 59.99M,
                     Category = "Ties",
                     Rating = 3,
-                    ImageUrl = "/images/products/red-silk-tie.jpg"
+                    ImageUrl = "/images/products/red-silk-tie.jpg",
+                    Sizes = new List<string> { "One Size" },
+                    Colors = new List<string> { "Red" },
+                    Reviews = new List<Review>
+                    {
+                        new Review { Id = Guid.NewGuid(), Rating = 3, Comment = "Color is not as vibrant as expected.", UserName = "Frank White" }
+                    }
                 }
             };
 

@@ -25,15 +25,22 @@ namespace Backend.Controllers
             return await _context.Products.ToListAsync();
         }
 
-        // Get a single product by Id
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(Guid id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products
+                .Include(p => p.Reviews)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null)
             {
                 return NotFound();
+            }
+
+            // Calculate the average rating
+            if (product.Reviews.Any())
+            {
+                product.Rating = (int)product.Reviews.Average(r => r.Rating);
             }
 
             return product;

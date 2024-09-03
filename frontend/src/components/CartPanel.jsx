@@ -13,8 +13,8 @@ const CartPanel = ({ isOpen, onClose }) => {
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const handleCheckout = () => {
-    onClose(); // Close the CartPanel
-    navigate('/checkout'); // Navigate to the checkout page
+    onClose(); 
+    navigate('/checkout');
   };
 
   return (

@@ -4,8 +4,6 @@ import { Toaster } from "sonner";
 import NavBar from "./components/NavBar";
 import Home from "./components/Home";
 import Login from "./components/Login";
-import Register from "./components/Register";
-import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import OrderConfirmation from "./components/OrderConfirmation";
 import { Elements } from "@stripe/react-stripe-js";
@@ -42,8 +40,6 @@ function App() {
             <Routes>
               <Route exact path="/" element={<Home />} />
               <Route exact path="/login" element={<Login />} />
-              <Route exact path="/register" element={<Register />} />
-              <Route exact path="/cart" element={<Cart />} />
               <Route exact path="/suits" element={<SuitsPage />} />
               <Route exact path="/ties" element={<TiesPage />} />
               <Route exact path="/shoes" element={<ShoesPage />} />

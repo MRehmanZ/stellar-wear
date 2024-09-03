@@ -74,30 +74,8 @@ const NavBar = () => {
           ))}
         </div>
 
-        <div className='md:hidden font-bold text-2xl flex items-center justify-center'>
-        
-                <Link to="/wishlist" onClick={toggleMenu} className="flex items-center justify-center hover:text-gray-300">
-                  <FaHeart className="mr-2" />
-                </Link>
-              
-                <Link to={isLoggedIn ? '/profile' : '/login'} onClick={toggleMenu} className="flex items-center justify-center hover:text-gray-300">
-                  <FaUserCircle className="mr-2" />
-                </Link>
-              
-              
-                <button onClick={toggleCart} className="flex items-center justify-center hover:text-gray-300 relative">
-                  <FaShoppingCart className="text-2xl" />
-                  {cartItemCount > 0 && (
-                    <span className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 bg-gray-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                      {cartItemCount}
-                    </span>
-                  )}
-                </button>
-              
-        </div>
-
         <div className="hidden md:flex items-center space-x-6">
-          <button
+        <button
             onClick={() => navigate('/wishlist')}
             className="relative flex items-center justify-center p-2 rounded hover:bg-gray-700"
           >
@@ -109,7 +87,7 @@ const NavBar = () => {
               onClick={toggleDropdown}
               className="hover:text-gray-300 flex items-center focus:outline-none"
             >
-              <FaUserCircle className="text-2xl mr-2" />
+              <FaUserCircle className="text-2xl mr-2"  />
               Account <FaChevronDown className="ml-1" />
             </button>
             {isDropdownOpen && (
@@ -119,19 +97,20 @@ const NavBar = () => {
                   onClick={toggleDropdown}
                   className="block px-4 py-2"
                 >
-                  {isLoggedIn ? `Profile: ${user?.name}` : 'Login'}
+                  {isLoggedIn ? `Profile: ${user?.name}`  : 'Login'}
                 </Link>
                 {isLoggedIn && (
                   <>
-                    {isAdmin &&
-                      <Link
-                        to="/admin"
-                        onClick={toggleDropdown}
-                        className="block px-4 py-2 hover:bg-gray-200"
-                      >
-                        Admin Dashboard
-                      </Link>
-                    }
+                  {isAdmin &&
+                  
+                    <Link
+                      to="/admin"
+                      onClick={toggleDropdown}
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
+                      Admin Dashboard
+                    </Link> }
+                    
                     <Link
                       to="/orders"
                       onClick={toggleDropdown}
@@ -155,6 +134,7 @@ const NavBar = () => {
           </div>
           <button onClick={toggleCart} className="relative hover:text-gray-300 flex items-center">
             <FaShoppingCart className="text-2xl mr-2" />
+            
             {cartItemCount > 0 && (
               <span className="absolute top-4 right-0 bg-gray-600 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
                 {cartItemCount}
@@ -176,6 +156,7 @@ const NavBar = () => {
                   </Link>
                 </li>
               ))}
+              <li><Link to="/wishlist" onClick={toggleMenu} className="hover:text-gray-300">Wishlist</Link></li>
             </ul>
           </div>
         )}

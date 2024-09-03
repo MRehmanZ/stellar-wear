@@ -28,6 +28,7 @@ import AccessoriesPage from "./components/AccessoriesPage";
 import ManageCategories from "./components/admin/ManageCategories";
 import ProductDetail from "./components/ProductDetail";
 import ConsentBanner from "./components/ConsentBanner";
+import PrivacyPolicy from "./components/PrivacyPolicy";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -49,7 +50,6 @@ function App() {
               <Route exact path="/accessories" element={<AccessoriesPage />} />
               <Route path="products" element={<ProductsPage />} />
               <Route exact path="/product/:id" element={<ProductDetail />} />
-
               <Route
                 exact
                 path="/checkout"
@@ -64,6 +64,7 @@ function App() {
               <Route exact path="/order-confirmation" element={<OrderConfirmation />} />
               <Route exact path="/orders" element={<OrdersPage />} />
               <Route exact path="/order/:orderId" element={<OrderDetails />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               
               {/* Admin Routes */}
               <Route 

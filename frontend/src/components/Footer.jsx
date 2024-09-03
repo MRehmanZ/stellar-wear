@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -50,6 +51,7 @@ const Footer = () => {
       <div className="text-center text-sm mt-6 border-t border-gray-700 pt-4">
         © 2024 StellarWear. All rights reserved.
       </div>
+      <Link to="/privacy-policy" className="underline text-primary">Privacy Policy</Link>
     </footer>
   );
 };

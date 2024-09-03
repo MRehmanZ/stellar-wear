@@ -29,8 +29,7 @@ function Login() {
       toast.success("Login successful!");
       navigate("/");
     } catch (error) {
-      console.error("Login failed:", error);
-      toast.error("Login failed. Please check your credentials and try again.");
+      toast.error(error);
     }
   };
 

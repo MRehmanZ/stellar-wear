@@ -256,7 +256,7 @@ const Checkout = () => {
                     </div>
                     <div className="flex-1">
                       <h4 className="font-semibold">{item.name}</h4>
-                      <p className="text-sm text-gray-500">£{item.price.toFixed(2)}</p>
+                      <p className="text-sm text-gray-500">£{item.price?.tofixed(2)}</p>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Button

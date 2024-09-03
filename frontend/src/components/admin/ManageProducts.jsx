@@ -85,7 +85,7 @@ const ManageProducts = () => {
               {products.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell>{product.name}</TableCell>
-                  <TableCell>£{product.price.toFixed(2)}</TableCell>
+                  <TableCell>£{product.price?.toFixed(2)}</TableCell>
                   <TableCell>{product.category}</TableCell>
                   <TableCell>
                     <Button onClick={() => handleEdit(product)} className="mr-2" variant="outline" size="icon">

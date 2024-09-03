@@ -149,7 +149,7 @@ const ProductsPage = () => {
                   {renderStars(product.rating)}
                 </div>
                 <div className="flex items-center justify-between mt-4">
-                  <span className="text-2xl font-bold text-primary">£{product.price.toFixed(2)}</span>
+                  <span className="text-2xl font-bold text-primary">£{product.price?.tofixed(2)}</span>
                   <div className="flex items-center gap-2">
                     <Input
                       type="number"

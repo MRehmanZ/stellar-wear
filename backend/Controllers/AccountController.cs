@@ -34,6 +34,7 @@ namespace Backend.Controllers
 
             if (result.Succeeded)
             {
+                await _authService.AddRole(user, "User");
                 var token = await _authService.GenerateEmailConfirmationTokenAsync(user);
                 var verificationLink = Url.Action("VerifyEmail", "Account", new
                 {
@@ -71,6 +72,10 @@ namespace Backend.Controllers
         public async Task<IActionResult> Login(LoginModel model)
         {
             var user = await _authService.FindByEmailOrUsernameAsync(model.UsernameOrEmail);
+            if (!await _authService.CheckEmailConfirmation(user))
+            {
+                return Unauthorized("Please verify your email before logging in.");
+            }
             if (user == null)
             {
                 return Unauthorized("Invalid login attempt.");

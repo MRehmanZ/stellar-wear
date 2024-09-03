@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(BackendDbContext))]
-    [Migration("20240903123159_Testing1")]
-    partial class Testing1
+    [Migration("20240903153841_AddRole")]
+    partial class AddRole
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -543,13 +543,11 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.Review", b =>
                 {
-                    b.HasOne("Backend.Models.Product", "Product")
+                    b.HasOne("Backend.Models.Product", null)
                         .WithMany("Reviews")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

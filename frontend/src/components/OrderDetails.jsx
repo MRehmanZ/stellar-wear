@@ -88,7 +88,7 @@ const OrderDetails = () => {
               {order.orderItems.$values.map((item) => (
                 <li key={item.productId} className="flex justify-between">
                   <span>{item.productName}</span>
-                  <span>{item.quantity} x £{item.price.toFixed(2)}</span>
+                  <span>{item.quantity} x £{item.price?.tofixed(2)}</span>
                 </li>
               ))}
             </ul>

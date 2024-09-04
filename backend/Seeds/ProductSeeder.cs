@@ -50,7 +50,6 @@ namespace Backend.Seeds
                     Category = "Ties",
                     Rating = 5,
                     ImageUrl = "/images/products/blue-tie.jpg",
-                    IsFeatured = true,
                     Sizes = new List<string> { "One Size" },
                     Colors = new List<string> { "Blue" },
                     Reviews = new List<Review>
@@ -132,7 +131,6 @@ namespace Backend.Seeds
                     Category = "Shoes",
                     Rating = 5,
                     ImageUrl = "/images/products/leather-oxford-shoes.jpg",
-                    IsFeatured = false,
                     Sizes = new List<string> { "8", "9", "10", "11", "12" },
                     Colors = new List<string> { "Black" },
                     Reviews = new List<Review>

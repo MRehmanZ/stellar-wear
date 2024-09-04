@@ -17,8 +17,7 @@ const Wishlist = () => {
         const items = await getWishlist();
         setWishlistItems(items.$values || []); 
       } catch (error) {
-        console.error('Failed to load wishlist:', error);
-        toast.error('Failed to load wishlist');
+        toast.error('Please login.');
       }
     };
 

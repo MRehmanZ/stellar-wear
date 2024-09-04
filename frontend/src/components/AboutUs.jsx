@@ -29,7 +29,7 @@ const AboutUs = () => {
       <section className="mb-12">
         <div className="grid md:grid-cols-2 gap-8">
           <div>
-            <img src="/images/about-us/mission.jpg" alt="Our Mission" className="rounded-lg shadow-lg w-full h-auto object-cover" />
+            <img src="/mission.jpg" alt="Our Mission" className="rounded-lg shadow-lg w-full h-auto object-cover" />
           </div>
           <div className="flex flex-col justify-center">
             <h2 className="text-3xl font-semibold text-gray-800 mb-4">Why Choose Us?</h2>

@@ -24,16 +24,9 @@ namespace Backend
 
             builder.Services.AddControllers();
 
+            // Configure Entity Framework Core with SQL Server
             builder.Services.AddDbContext<BackendDbContext>(options =>
-            {
-                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-                if (string.IsNullOrEmpty(connectionString))
-                {
-                    connectionString = Environment.GetEnvironmentVariable("MYSQL_URL") ?? "";
-                }
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-            });
-
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
 
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
@@ -90,7 +83,7 @@ namespace Backend
             {
                 options.AddPolicy("AllowReact", builder =>
                 {
-                    builder.WithOrigins("https://stellar-wear.up.railway.app:8080")
+                    builder.WithOrigins("http://localhost:5173")
                            .AllowAnyMethod()
                            .AllowAnyHeader();
                 });

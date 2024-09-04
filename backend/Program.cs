@@ -82,7 +82,7 @@ namespace Backend
             {
                 options.AddPolicy("AllowReact", builder =>
                 {
-                    builder.WithOrigins("https://stellar-wear.up.railway.app")
+                    builder.WithOrigins("https://stellar-wear.up.railway.app:8080")
                            .AllowAnyMethod()
                            .AllowAnyHeader();
                 });

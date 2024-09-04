@@ -78,9 +78,14 @@ const NavBar = () => {
           <Link to="/wishlist" className="flex items-center justify-center hover:text-gray-300">
             <FaHeart className="mr-2" />
           </Link>
-          <button onClick={toggleDropdown} className="flex items-center justify-center hover:text-gray-300">
+          {isLoggedIn ? (<button onClick={toggleDropdown} className="flex items-center justify-center hover:text-gray-300">
             <FaUserCircle className="mr-2" />
-          </button>
+          </button>) : 
+          
+          (<Link to="/login" className="flex items-center justify-center hover:text-gray-300">
+            <FaUserCircle className="mr-2" />
+          </Link>)}
+          
           <button onClick={toggleCart} className="flex items-center justify-center hover:text-gray-300 relative">
             <FaShoppingCart className="text-2xl" />
             {cartItemCount > 0 && (

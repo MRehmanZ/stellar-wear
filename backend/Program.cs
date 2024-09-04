@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Stripe;
+using Pomelo.EntityFrameworkCore.MySql;
 
 namespace Backend
 {
@@ -23,7 +24,9 @@ namespace Backend
             builder.Services.AddControllers();
 
             builder.Services.AddDbContext<BackendDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
+                options.UseMySql(builder.Configuration.GetConnectionString("Connection"),
+                new MySqlServerVersion(new Version(8, 0, 21))));
+
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
             {

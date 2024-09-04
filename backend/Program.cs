@@ -23,10 +23,9 @@ namespace Backend
 
             builder.Services.AddControllers();
 
-            builder.Services.AddDbContext<BackendDbContext>(options =>
-                options.UseMySql(builder.Configuration.GetConnectionString("Connection"),
-                new MySqlServerVersion(new Version(8, 0, 21))));
-
+            string connectionString = $"Server={Environment.GetEnvironmentVariable("MYSQLHOST")};" + $"Port={Environment.GetEnvironmentVariable("MYSQLPORT")};" + $"Database={Environment.GetEnvironmentVariable("MYSQLDATABASE")};" + $"Uid={Environment.GetEnvironmentVariable("MYSQLUSER")};" + $"Pwd={Environment.GetEnvironmentVariable("MYSQLPASSWORD")};" + "SslMode=Preferred;"; 
+            
+            builder.Services.AddDbContext<BackendDbContext>(options => options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21))));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
             {
